@@ -14,14 +14,22 @@ typedef struct instruction INSTRUCTION;
 
 struct cpu {
 	/* Registers */
-	unsigned char a; 	/* Accumulator */
-	unsigned char x; 	/* X Register */
-	unsigned char y;	/* Y Register */
-	unsigned char stkp; 	/* Stack Pointer */
-	unsigned short pc;	/* Program Counter */
-	unsigned char status; 	/* Status Register */
+	unsigned char a; 	     /* Accumulator */
+	unsigned char x; 	     /* X Register */
+	unsigned char y;	     /* Y Register */
+	unsigned char stkp; 	 /* Stack Pointer */
+	unsigned short pc;	     /* Program Counter */
+	unsigned char status; 	 /* Status Register */
 
 	/* Bus */
 	Bus* bus;
+
+	/* Intermediate CPU States */
+	unsigned char fetched;   /* Input value to ALU */
+	unsigned short addr_abs; /* Current observed address */
+	unsigned short addr_rel; /* Relative address */
+	unsigned char opcode;    /* Current operation */
+	unsigned char cycles;    /* Number of clock cycles the opcode takes */
+
 }
 
