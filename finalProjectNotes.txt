@@ -1,0 +1,164 @@
+bitwise operations:
+
+extracting information from a larger number:
+Suppose we have 01101011, and sections of this number represent different values
+
+we can extract these values with a bitwise and (&) along with a bitmask
+
+  01101011
+& 00000111
+-----------
+  00000011
+
+to get differnt sections, we can proceed with a bitwise shift.
+
+  01101011
+& 11100000
+-----------
+  01100000
+
+then:
+01100000 >>5 = 00000011 (the extracted section)
+
+we can also test for singular flags by using bitwise & and then comparing to zero
+
+  00001000
+& 00001000
+-----------
+  00001000 > 0 (is this flag greater than zero?)
+
+convenient, as we can place this comparision right into an if statement
+if (value & mask) {
+	...
+}
+
+setting information can be done with bitwise or (|)
+
+x = 0b00000000
+
+y = 5 = 0b101
+
+to put y in x, we can shift then OR together
+y<<2
+x |= (y<<2)
+
+x == 0b00010100
+
+to unset a section of bits, we can invert out bitmask, then AND them together
+
+x = 0b10111011
+
+ mask = 0b00100000
+~mask = 0b11011111
+
+  10111011
+& 11011111
+-----------
+  10011011
+
+x &= ~(y<<5) = 0b10011011
+
+now that singular bit is flipped off.
+
+we can also flip specific bits with XOR (^)
+
+x = 10111011
+mask = 00100000
+
+  10111011
+^ 00100000
+-----------
+  10011011
+
+C BIT FIELDS:
+a convieniet way to describe these masks is with a bitfield.
+we can specify the width of a variable in a struct with a colon, for example:
+
+struct {
+   unsigned int widthValidated : 1;
+   unsigned int heightValidated : 1;
+} status;
+
+will create a struct of two bits being used as flags.
+
+to be able to use both bitwise and new structure, we can use a union to refer to the same data in different ways
+
+union TwoPartChar{
+	struct{
+		int partA : 4;
+		int partB : 4:
+	}
+	char bothParts;
+};
+
+NES CONSTRUCTION:
+
+	|CPU|on clock		|2KB MEM|($0000->$07FF)		|APU|
+	|			|				|
+	|_____________________________________________________________________BUS
+		|				|
+		|CARTIDGE|($4020->$FFFF)	|PPU|($2000->$2007) on clock -------->|OAM|(stores sprite location: Object Attribute Memory), gets memory from cpu via DMA (direct memory access). Achieves this by pausing the cpu
+		|				|
+		V				|____________________________________________________________________________PPU BUS (16kb)
+		|					|				|				|
+		--------------------------------------->|Graphics 8kb|($0800-> $1FFF)	|VRAM2kb|($2000->$27FF)		|Palletes|($3F00->$3FFF)
+		|
+		|MAPPER|
+
+mapper allows the NES to refer to more memory than is physically addressable (think paging)
+
+
+6502 Arch:
+
+	 |   |----> 16-bit address
+	 |   |<---> 8-bit data
+clock--->|CPU|----> R/W
+
+
+CPU can access anything on the BUS, being addresses 0x0000 to 0xFFFF
+The cpu can read and write to these busses, as well as other devices.
+
+This bus is covered entirely by the RAM.
+
+For the simplest emulator, we will need a CPU, RAM and the BUS.
+
+The 6502 has 6 core registers:
+8-bit:
+A: Accumulator
+X: Register
+Y: Register
+
+others:
+stkp: stack pointer
+pc: program counter
+status: status register (a bunch of 1 bit flags describing CPU state)
+
+Not all instructions are the same size
+some instructions have different cycle counts
+
+56 legal instructions
+
+Instrction set:
+
+example:
+LDA $41 - 2-byte instrcution (LDA load accumulator)
+LDA $0105 - 3-byte
+CLC - 1 byte (clear carry flag from status register)
+
+instuctions must be emulated with:
+functionality
+addressing mode
+cycles
+
+all instructions fit in a 16x16 spec table
+
+first two bytes are always used for addressing the instruction table, which includes clock cycles, instruction format and instruction function
+
+STEPS FOR EXECUTION:
+1) read byte @ pc
+2) opcode[byte] find addressing mode and how many cycles are needed
+3) read 0, 1, 2 bytes as instruction input
+4) execute instruction
+5) wait for number of cycles instrcution takes, goto 1
+
+
