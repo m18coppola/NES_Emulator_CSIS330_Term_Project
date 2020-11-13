@@ -2,14 +2,14 @@
 
 /* Enumeration of flags for the status register. */
 enum STATUS_FLAG {
-	C = (1 << 0), /* Carry bit */
-	Z = (1 << 1), /* Zero flag */
-	I = (1 << 2), /* Disable interrupts */
-	D = (1 << 3), /* Decimal Mode */
-	B = (1 << 4), /* Break */
-	U = (1 << 5), /* Unused */
-	V = (1 << 6), /* Overflow */
-	N = (1 << 7), /* Negative */
+	C = (1 << 0),   /* Carry bit */
+	Z = (1 << 1),   /* Zero flag */
+	I = (1 << 2),   /* Disable interrupts */
+	D = (1 << 3),   /* Decimal Mode */
+	B = (1 << 4),   /* Break */
+	U = (1 << 5),   /* Unused */
+	V = (1 << 6),   /* Overflow */
+	N = (1 << 7),   /* Negative */
 };
 
 typedef struct cpu CPU;
@@ -50,10 +50,10 @@ void cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool v);
 
 /* External event functions.
    These represent the physical pins entering the cpu. */
-void cpu_clock(CPU* cpu); /* Performs one clock cycle. */
-void cpu_reset(CPU* cpu); /* Reset interrupt. */
-void cpu_irq(CPU* cpu);   /* Interrupt request. */
-void cpu_nmi(CPU* cpu);   /* Non-maskable interrupt request. */
+void cpu_clock(CPU* cpu);   /* Performs one clock cycle. */
+void cpu_reset(CPU* cpu);   /* Reset interrupt. */
+void cpu_irq(CPU* cpu);     /* Interrupt request. */
+void cpu_nmi(CPU* cpu);     /* Non-maskable interrupt request. */
 
 /* Fetches memory according to opcode stored in the cpu. */
 void cpu_fetch(CPU* cpu);
