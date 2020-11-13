@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "bus.h"
 
 /* Enumeration of flags for the status register. */
 enum STATUS_FLAG {
