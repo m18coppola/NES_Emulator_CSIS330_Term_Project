@@ -2,7 +2,9 @@
 #include "bus.h"
 
 /* Enumeration of flags for the status register. */
-enum STATUS_FLAG {
+typedef enum statusFlags STATUS_FLAG;
+
+enum statusFlags {
 	C = (1 << 0),   /* Carry bit */
 	Z = (1 << 1),   /* Zero flag */
 	I = (1 << 2),   /* Disable interrupts */
@@ -35,13 +37,13 @@ struct cpu {
 	unsigned short addr_rel; /* Relative address */
 	unsigned char opcode;    /* Current operation */
 	unsigned char cycles;    /* Number of clock cycles the opcode takes */
-}
+};
 
 /* Instruction Structure */
 struct instruction {
 	char* name;                     /* Name of instruction */
-	unsigned char(operate)(void);   /* Pointer to operation function */
-	unsigned char(addr_mode)(void); /* Pointer to addressing mode function */
+	unsigned char(*operate)(void);   /* Pointer to operation function */
+	unsigned char(*addr_mode)(void); /* Pointer to addressing mode function */
 	unsigned char cycles;           /* Number of cycles for instruction */
 };
 
@@ -91,3 +93,6 @@ unsigned char TSX(CPU* cpu);	unsigned char TXA(CPU* cpu);	unsigned char TXS(CPU*
  * works as a NOP instruction
  */
 unsigned char XXX(CPU* cpu);
+
+/* lookup table for instructions */
+INSTRUCTION lookup[16 * 16];

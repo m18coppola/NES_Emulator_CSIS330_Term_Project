@@ -22,7 +22,7 @@ void
 cpu_clock(CPU* cpu) 
 {
 	if (cpu->cycles == 0) {
-		cpu->opcode = read(cpu, cpu->pc);
+		cpu->opcode = cpu_read(cpu, cpu->pc);
 		cpu->pc++;
 	
 		cpu->cycles = lookup[cpu->opcode].cycles;
@@ -31,13 +31,13 @@ cpu_clock(CPU* cpu)
 		 * is needed for the instruction. Some instructions have special cases 
 		 * in which another cycle is needed.
 		 */
-		unsigned char cycleCheck1 = (*lookup[cpu->opcode].addrmode)();
+		unsigned char cycleCheck1 = (*lookup[cpu->opcode].addr_mode)();
 		unsigned char cycleCheck2 = (*lookup[cpu->opcode].operate)();
 
 		cpu->cycles += (cycleCheck1 & cycleCheck2);
 	}
 
-	cycle--;
+	cpu->cycles--;
 }
 
 /* Returns the value of the input flag in the status register. */
@@ -59,8 +59,8 @@ cpu_getFlag(CPU* cpu, STATUS_FLAG f) {
 void
 cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
 	if (set) {
-		cpu->status = status | f;  
+		cpu->status = cpu->status | f;  
 	} else {
-		cpu->status = status & ~f; 
+		cpu->status = cpu->status & ~f; 
 	}
 }
