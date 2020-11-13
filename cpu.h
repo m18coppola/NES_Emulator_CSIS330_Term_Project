@@ -45,8 +45,8 @@ struct instruction {
 };
 
 /* Helper functions to interact with the status register. */
-unsigned cpu_getFlag(CPU* cpu, STATUS_FLAG f);
-void cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool v);
+unsigned char cpu_getFlag(CPU* cpu, STATUS_FLAG f);
+void cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set);
 
 /* External event functions.
  * These represent the physical pins entering the cpu. */

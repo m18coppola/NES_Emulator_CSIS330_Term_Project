@@ -14,8 +14,53 @@ cpu_write(CPU* cpu, unsigned short addr, unsigned char byte)
 	bus_write(cpu->bus, addr, byte);
 }
 
+/* Cycles the clock. If there are no cycles left in the current instruction
+ * it will read the next instruction in the program, setting the current 
+ * opcode in the CPU.
+ */
 void
-cpu_clock() 
+cpu_clock(CPU* cpu) 
 {
+	if (cpu->cycles == 0) {
+		cpu->opcode = read(cpu, cpu->pc);
+		cpu->pc++;
 	
+		cpu->cycles = lookup[cpu->opcode].cycles;
+		
+		/* Checks the address mode and the operation to see if another cycle 
+		 * is needed for the instruction. Some instructions have special cases 
+		 * in which another cycle is needed.
+		 */
+		unsigned char cycleCheck1 = (*lookup[cpu->opcode].addrmode)();
+		unsigned char cycleCheck2 = (*lookup[cpu->opcode].operate)();
+
+		cpu->cycles += (cycleCheck1 & cycleCheck2);
+	}
+
+	cycle--;
+}
+
+/* Returns the value of the input flag in the status register. */
+unsigned char 
+cpu_getFlag(CPU* cpu, STATUS_FLAG f) {
+	unsigned char flagCheck = cpu->status & f;
+	
+	/* Returns 1 if the bit that was checked is toggled on. 
+	 * There are 8 different statuses so flagCheck can be greater than 1. */
+	if (flagCheck > 0)
+		return 1;
+	
+	return 0;
+}
+
+/* Sets the flagged bit in the input CPU's status 
+ * register with the input value. 
+ */
+void
+cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
+	if (set) {
+		cpu->status = status | f;  
+	} else {
+		cpu->status = status & ~f; 
+	}
 }
