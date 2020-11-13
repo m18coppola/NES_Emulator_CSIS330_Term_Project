@@ -18,12 +18,12 @@ typedef struct instruction INSTRUCTION;
 /* CPU Structure */
 struct cpu {
 	/* Registers */
-	unsigned char a; 	     /* Accumulator */
-	unsigned char x; 	     /* X Register */
-	unsigned char y;	     /* Y Register */
-	unsigned char stkp; 	 /* Stack Pointer */
-	unsigned short pc;	     /* Program Counter */
-	unsigned char status; 	 /* Status Register */
+	unsigned char a;       /* Accumulator */
+	unsigned char x;       /* X Register */
+	unsigned char y;       /* Y Register */
+	unsigned char stkp;    /* Stack Pointer */
+	unsigned short pc;     /* Program Counter */
+	unsigned char status;  /* Status Register */
 
 	/* Bus */
 	Bus* bus;
@@ -48,8 +48,10 @@ struct instruction {
 unsigned cpu_getFlag(CPU* cpu, STATUS_FLAG f);
 void cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool v);
 
-/* External event functions.
-   These represent the physical pins entering the cpu. */
+/*
+ * External event functions.
+ * These represent the physical pins entering the cpu.
+ */
 void cpu_clock(CPU* cpu);   /* Performs one clock cycle. */
 void cpu_reset(CPU* cpu);   /* Reset interrupt. */
 void cpu_irq(CPU* cpu);     /* Interrupt request. */
