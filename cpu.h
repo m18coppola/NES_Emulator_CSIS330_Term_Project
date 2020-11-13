@@ -49,7 +49,7 @@ unsigned cpu_getFlag(CPU* cpu, STATUS_FLAG f);
 void cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool v);
 
 /* External event functions.
-   These represent the physical pins entering the cpu. */
+ * These represent the physical pins entering the cpu. */
 void cpu_clock(CPU* cpu);   /* Performs one clock cycle. */
 void cpu_reset(CPU* cpu);   /* Reset interrupt. */
 void cpu_irq(CPU* cpu);     /* Interrupt request. */
