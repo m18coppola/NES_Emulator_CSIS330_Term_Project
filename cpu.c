@@ -31,8 +31,8 @@ cpu_clock(CPU* cpu)
 		 * is needed for the instruction. Some instructions have special cases 
 		 * in which another cycle is needed.
 		 */
-		unsigned char cycleCheck1 = (*lookup[cpu->opcode].addr_mode)();
-		unsigned char cycleCheck2 = (*lookup[cpu->opcode].operate)();
+		unsigned char cycleCheck1 = (*lookup[cpu->opcode].addr_mode)(cpu);
+		unsigned char cycleCheck2 = (*lookup[cpu->opcode].operate)(cpu);
 
 		cpu->cycles += (cycleCheck1 & cycleCheck2);
 	}
@@ -58,9 +58,13 @@ cpu_getFlag(CPU* cpu, STATUS_FLAG f) {
  */
 void
 cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
+	unsigned char status;
+
+	status = cpu->status;
 	if (set) {
-		cpu->status = cpu->status | f;  
+		status = status | f;  
 	} else {
-		cpu->status = cpu->status & ~f; 
+		status = status & ~f; 
 	}
 }
+
