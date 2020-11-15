@@ -151,7 +151,7 @@ CLD(CPU* cpu) {
  */
 unsigned char
 CLI(CPU* cpu) {
-	enum STATUS_FLAG interruptFlag;
+	STATUS_FLAG interruptFlag;
 
 	interruptFlag = D;
 	cpu_setFlag(cpu, interruptFlag, false);
