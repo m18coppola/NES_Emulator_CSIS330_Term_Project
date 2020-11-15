@@ -110,3 +110,21 @@ INY(CPU* cpu) {
 	flagToSet = Z;
 	cpu_setFlag(cpu, flagToSet, true);
 }
+
+// TODO Find out how to change AND operation depending on Addressing mode.
+/* And Memory with Accumulator */
+/*
+ * The Accumulator register is set to the result of a bitwise and between
+ * the Accumulator and the area referenced in memory.
+ */
+unsigned char 
+AND(CPU* cpu) {
+	enum STATUS_FLAG flagToSet;
+	
+	cpu->a = cpu->a & cpu->x;
+
+	flagToSet = N;
+	cpu_setFlag(cpu, flagToSet, true);
+	flagToSet = Z;
+	cpu_setFlag(cpu, flagToSet, true);
+}
