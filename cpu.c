@@ -86,3 +86,27 @@ IMP(CPU* cpu)
 	cpu->fetched = cpu->a;
 	return 0;
 }
+
+
+
+/* 
+ *
+ * Operations
+ * 
+ */
+
+/* Increment Y */
+/*
+ * Increments the Y register.
+ */
+unsigned char 
+INY(CPU* cpu) {
+	enum STATUS_FLAG flagToSet;
+
+	cpu->y++;
+
+	flagToSet = N;
+	cpu_setFlag(cpu, flagToSet, true);
+	flagToSet = Z;
+	cpu_setFlag(cpu, flagToSet, true);
+}
