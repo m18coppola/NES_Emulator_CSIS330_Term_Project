@@ -14,7 +14,8 @@ cpu_write(CPU* cpu, unsigned short addr, unsigned char byte)
 	bus_write(cpu->bus, addr, byte);
 }
 
-/* Cycles the clock. If there are no cycles left in the current instruction
+/*
+ * Cycles the clock. If there are no cycles left in the current instruction
  * it will read the next instruction in the program, setting the current 
  * opcode in the CPU.
  */
@@ -53,7 +54,8 @@ cpu_getFlag(CPU* cpu, STATUS_FLAG f) {
 	return 0;
 }
 
-/* Sets the flagged bit in the input CPU's status 
+/*
+ * Sets the flagged bit in the input CPU's status 
  * register with the input value. 
  */
 void
@@ -68,3 +70,19 @@ cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
 	}
 }
 
+/* 
+ * Addressing Modes:
+ *
+ */
+
+/* Implied */
+/* 
+ * Usually used for simple instructions that require no additional data.
+ * Some ops will target the accumulator, so we fetch that
+ */
+unsigned char
+IMP(CPU* cpu)
+{
+	cpu->fetched = cpu->a;
+	return 0;
+}
