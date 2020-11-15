@@ -128,3 +128,16 @@ AND(CPU* cpu) {
 	flagToSet = Z;
 	cpu_setFlag(cpu, flagToSet, true);
 }
+
+/* Clear Carry Flag */
+/*
+ * Clears the carry flag in the status register.
+ * 
+ */
+unsigned char 
+CLC(CPU* cpu) {
+	enum STATUS_FLAG carryFlag;
+
+	carryFlag = C;
+	cpu_setFlag(cpu, carryFlag, false);
+}
