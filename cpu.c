@@ -111,7 +111,7 @@ AND(CPU* cpu) {
 	flagToSet = Z;
 	cpu_setFlag(cpu, flagToSet, true);
 
-	return 0;
+	return 1;
 }
 
 /* Clear Carry Flag */
@@ -144,9 +144,25 @@ CLD(CPU* cpu) {
 	return 0;
 }
 
+/* Clear Interrupt Disable Bit */
+/*
+ * Clears the interrupt flag in the status register.
+ *
+ */
+unsigned char
+CLI(CPU* cpu) {
+	enum STATUS_FLAG interruptFlag;
+
+	interruptFlag = D;
+	cpu_setFlag(cpu, interruptFlag, false);
+
+	return 0;
+}
+
 /* Increment Y */
 /*
- * Increments the Y register.
+ * Increments the Y register.flagToSet = C;
+	cpu_setFlag(cpu, flagToSet, true);
  */
 unsigned char 
 INY(CPU* cpu) {
