@@ -117,6 +117,19 @@ ZPX(CPU* cpu)
 	return 0;
 }
 
+/* Zero Page with Y as offset */
+/* 
+ * see ZPX
+ */
+unsigned char
+ZPY(CPU* cpu)
+{
+	cpu->addr_abs = cpu_read(cpu, cpu->pc + cpu->y);
+	cpu->pc++;
+	cpu->addr_abs = cpu->addr_abs & 0x00FF;
+	return 0;
+}
+
 /* 
  *
  * Operations
