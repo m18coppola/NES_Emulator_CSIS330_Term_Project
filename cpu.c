@@ -130,6 +130,28 @@ ZPY(CPU* cpu)
 	return 0;
 }
 
+/* Relative */
+/* 
+ * This addressing mode is for branching instructions.
+ */
+unsigned char
+REL(CPU* cpu)
+{
+	cpu->addr_rel = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	/* the address must be within -128 and 128
+ 	   you cannot branch to any address with the 6502 */
+
+	if (cpu->addr_rel & 0x80) { 
+		cpu->addr_rel = cpu->addr_rel | 0x00FF;
+	}
+
+	return 0;
+}
+
+
+
+
 /* 
  *
  * Operations
