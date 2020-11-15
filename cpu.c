@@ -149,7 +149,24 @@ REL(CPU* cpu)
 	return 0;
 }
 
+/* Absolute */
+/* 
+ * load a 16 bit address
+ */
+unsigned char
+ABS(CPU* cpu)
+{
+	unsigned char hi, lo;
 
+	lo = cpu_read(cpu->pc);
+	cpu->pc++;
+	hi = cpu_read(cpu->pc);
+	cpu->pc++;
+
+	cpu->addr_abs = (hi << 8) | lo;
+
+	return 0;
+}
 
 
 /* 
