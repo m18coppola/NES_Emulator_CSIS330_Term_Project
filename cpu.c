@@ -103,6 +103,19 @@ ZP0(CPU* cpu)
 	return 0;
 }
 
+/* Zero Page with X as offset */
+/* 
+ * same as ZP0, but uses X register as an offset value.
+ * useful for iterating through memory
+ */
+unsigned char
+ZPX(CPU* cpu)
+{
+	cpu->addr_abs = cpu_read(cpu, cpu->pc + cpu->x);
+	cpu->pc++;
+	cpu->addr_abs = cpu->addr_abs & 0x00FF;
+	return 0;
+}
 
 /* 
  *
