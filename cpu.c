@@ -95,6 +95,55 @@ IMP(CPU* cpu)
  * 
  */
 
+/* And Memory with Accumulator */
+/*
+ * The Accumulator register is set to the result of a bitwise and between
+ * the Accumulator and the area referenced in memory.
+ */
+unsigned char 
+AND(CPU* cpu) {
+	enum STATUS_FLAG flagToSet;
+	
+	cpu->a = cpu->a & cpu->fetched;
+
+	flagToSet = N;
+	cpu_setFlag(cpu, flagToSet, true);
+	flagToSet = Z;
+	cpu_setFlag(cpu, flagToSet, true);
+
+	return 0;
+}
+
+/* Clear Carry Flag */
+/*
+ * Clears the carry flag in the status register.
+ * 
+ */
+unsigned char 
+CLC(CPU* cpu) {
+	enum STATUS_FLAG carryFlag;
+
+	carryFlag = C;
+	cpu_setFlag(cpu, carryFlag, false);
+
+	return 0;
+}
+
+/* Clear Decimal Mode */
+/*
+ * Clears the decimal mode flag in the status register.
+ * 
+ */
+unsigned char 
+CLD(CPU* cpu) {
+	enum STATUS_FLAG decimalFlag;
+
+	decimalFlag = D;
+	cpu_setFlag(cpu, decimalFlag, false);
+
+	return 0;
+}
+
 /* Increment Y */
 /*
  * Increments the Y register.
@@ -109,35 +158,6 @@ INY(CPU* cpu) {
 	cpu_setFlag(cpu, flagToSet, true);
 	flagToSet = Z;
 	cpu_setFlag(cpu, flagToSet, true);
-}
 
-// TODO Find out how to change AND operation depending on Addressing mode.
-/* And Memory with Accumulator */
-/*
- * The Accumulator register is set to the result of a bitwise and between
- * the Accumulator and the area referenced in memory.
- */
-unsigned char 
-AND(CPU* cpu) {
-	enum STATUS_FLAG flagToSet;
-	
-	cpu->a = cpu->a & cpu->x;
-
-	flagToSet = N;
-	cpu_setFlag(cpu, flagToSet, true);
-	flagToSet = Z;
-	cpu_setFlag(cpu, flagToSet, true);
-}
-
-/* Clear Carry Flag */
-/*
- * Clears the carry flag in the status register.
- * 
- */
-unsigned char 
-CLC(CPU* cpu) {
-	enum STATUS_FLAG carryFlag;
-
-	carryFlag = C;
-	cpu_setFlag(cpu, carryFlag, false);
+	return 0;
 }
