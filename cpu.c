@@ -159,6 +159,21 @@ CLI(CPU* cpu) {
 	return 0;
 }
 
+/* Clear Overflow Flag */
+/*
+ * Clears the overflow flag in the status register.
+ *
+ */
+unsigned char
+CLV(CPU* cpu) {
+	STATUS_FLAG overflowFlag;
+
+	overflowFlag = D;
+	cpu_setFlag(cpu, overflowFlag, false);
+
+	return 0;
+}
+
 /* Increment Y */
 /*
  * Increments the Y register.flagToSet = C;
