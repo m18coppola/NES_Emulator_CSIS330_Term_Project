@@ -72,7 +72,8 @@ cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
 
 /* 
  * Addressing Modes:
- *
+ * loads memory into cpu intermediate states
+ * returns the number of additional clock cycles the addressing mode takes
  */
 
 /* Implied */
@@ -87,6 +88,20 @@ IMP(CPU* cpu)
 	return 0;
 }
 
+/* Zero Page */
+/* 
+ * pages memory from the very first page (0x00??)
+ * this allows for more memory in the instruction
+ */
+unsigned char
+ZP0(CPU* cpu)
+{
+	
+	cpu->addr_abs = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	cpu->addr_abs = cpu->addr_abs & 0x00FF;
+	return 0;
+}
 
 
 /* 
