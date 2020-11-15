@@ -102,7 +102,7 @@ IMP(CPU* cpu)
  */
 unsigned char 
 AND(CPU* cpu) {
-	enum STATUS_FLAG flagToSet;
+	STATUS_FLAG flagToSet;
 	
 	cpu->a = cpu->a & cpu->fetched;
 
@@ -121,7 +121,7 @@ AND(CPU* cpu) {
  */
 unsigned char 
 CLC(CPU* cpu) {
-	enum STATUS_FLAG carryFlag;
+	STATUS_FLAG carryFlag;
 
 	carryFlag = C;
 	cpu_setFlag(cpu, carryFlag, false);
@@ -136,7 +136,7 @@ CLC(CPU* cpu) {
  */
 unsigned char 
 CLD(CPU* cpu) {
-	enum STATUS_FLAG decimalFlag;
+	STATUS_FLAG decimalFlag;
 
 	decimalFlag = D;
 	cpu_setFlag(cpu, decimalFlag, false);
@@ -150,7 +150,7 @@ CLD(CPU* cpu) {
  */
 unsigned char 
 INY(CPU* cpu) {
-	enum STATUS_FLAG flagToSet;
+	STATUS_FLAG flagToSet;
 
 	cpu->y++;
 
