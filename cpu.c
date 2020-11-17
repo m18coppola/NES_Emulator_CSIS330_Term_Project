@@ -120,7 +120,7 @@ ADC(CPU* cpu) {
 
 	cpu_setFlag(cpu, V, (cpu->a & 0x80) != (result & 0x80));
 	cpu_setFlag(cpu, N, cpu->a & 0x80);
-	cpu_setFlag(cpu, Z, result == 0);
+	cpu_setFlag(cpu, Z, result == 0X00);
 
 	// TODO - Implement the proper functionality for ADC regarding overflow.
 	// Not finished.
@@ -140,6 +140,24 @@ AND(CPU* cpu) {
 	cpu_setFlag(cpu, N, cpu->a & 0x80);
 	cpu_setFlag(cpu, Z, cpu->a == 0x00);
 	return 1;
+}
+
+/* Arithmetic Shift Left */
+/*
+ * Shifts the referenced byte (fetched memory or register) one bit.
+ */
+unsigned char 
+ASL(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu_setFlag(cpu, C, cpu->fetched & 0x80);
+
+	cpu->fetched = (cpu->fetched << 1) & 0xFE;
+	
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
 }
 
 /* Clear Carry Flag */
