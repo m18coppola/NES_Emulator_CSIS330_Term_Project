@@ -314,21 +314,46 @@ EOR(CPU* cpu) {
 	return 1;
 }
 
+/* Increment Memory by one */
+/*
+ * Increments the fetched memory by one.
+ */
+unsigned char
+INC(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu->fetched = (cpu->fetched + 1) & 0xFF;
+
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
+/* Increment X */
+/*
+ * Increments the X register by one.
+ */
+unsigned char 
+INX(CPU* cpu) {
+	cpu->x = cpu->x + 1;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 0;
+}
+
 /* Increment Y */
 /*
- * Increments the Y register.flagToSet = C;
-	cpu_setFlag(cpu, flagToSet, true);
+ * Increments the Y register by one.
  */
 unsigned char 
 INY(CPU* cpu) {
-	STATUS_FLAG flagToSet;
+	cpu->y = cpu->y + 1;
 
-	cpu->y++;
-
-	flagToSet = N;
-	cpu_setFlag(cpu, flagToSet, true);
-	flagToSet = Z;
-	cpu_setFlag(cpu, flagToSet, true);
+	cpu_setFlag(cpu, N, cpu->y & 0x80);
+	cpu_setFlag(cpu, Z, cpu->y == 0x00);
 
 	return 0;
 }
