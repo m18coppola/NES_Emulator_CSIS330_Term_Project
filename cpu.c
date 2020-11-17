@@ -70,6 +70,14 @@ cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
 	}
 }
 
+void
+cpu_fetch(CPU* cpu)
+{
+	if (lookup[cpu->opcode].addr_mode != IMP) {
+		cpu->fetched = cpu_read(cpu, cpu->addr_abs);
+	}
+}
+
 /* 
  * Addressing Modes:
  *
@@ -93,6 +101,11 @@ IMP(CPU* cpu)
  *
  * Operations
  * 
+ * 1) fetch memory
+ * 2) implement opcode
+ * 3) set flags
+ * 4) return the possibility of extra clock cycles
+ *
  */
 
 /* And Memory with Accumulator */
@@ -102,15 +115,10 @@ IMP(CPU* cpu)
  */
 unsigned char 
 AND(CPU* cpu) {
-	STATUS_FLAG flagToSet;
-	
+	cpu_fetch(cpu);
 	cpu->a = cpu->a & cpu->fetched;
-
-	flagToSet = N;
-	cpu_setFlag(cpu, flagToSet, true);
-	flagToSet = Z;
-	cpu_setFlag(cpu, flagToSet, true);
-
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
 	return 1;
 }
 
