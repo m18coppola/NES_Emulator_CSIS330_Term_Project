@@ -299,6 +299,21 @@ DEY(CPU* cpu) {
 	return 0;
 }
 
+/* Bitwise XOR A with Memory */
+/*
+ * The Accumulator register is set to the result of a bitwise
+ * exclusive or with the Accumulator register and the the fetched memory.
+ */
+unsigned char
+EOR(CPU* cpu) {
+	cpu->a = cpu->a ^ cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 1;
+}
+
 /* Increment Y */
 /*
  * Increments the Y register.flagToSet = C;
