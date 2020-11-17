@@ -175,10 +175,40 @@ CMP(CPU* cpu) {
 	unsigned char result = cpu->a - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
-	cpu_setFlag(cpu, Z, result == 0x00);
 	cpu_setFlag(cpu, C, A >= cpu->fetched);
+	cpu_setFlag(cpu, Z, result == 0x00);
 
 	return 1;
+}
+
+/* Compare X with Memory */
+/*
+ * Compares the X register with the fetched memory.
+ */
+unsigned char
+CPX(CPU* cpu) {
+	unsigned char result = cpu->x - cpu->fetched;
+
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, C, X >= cpu->fetched);
+	cpu_setFlag(cpu, Z, result == 0x00);
+
+	return 0;
+}
+
+/* Compare Y with Memory */
+/*
+ * Compares the Y register with the fetched memory.
+ */
+unsigned char
+CPY(CPU* cpu) {
+	unsigned char result = cpu->y - cpu->fetched;
+
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, C, Y >= cpu->fetched);
+	cpu_setFlag(cpu, Z, result == 0x00);
+
+	return 0;
 }
 
 /* Increment Y */
