@@ -368,3 +368,21 @@ JMP(CPU* cpu) {
 
 	return 0;
 }
+
+/* Jump to SubRoutine */
+/*
+ * Pushes the program counter to the stack and is then set to the specified value.
+ */
+unsigned char 
+JSR(CPU* cpu) {
+	unsigned short progCounter = cpu->pc - 1;
+
+	cpu_write(cpu, 0x0100 + cpu->stkp, progCounter >> 8 & 0x00FF);
+	cpu->stkp = cpu->stkp - 1;
+	cpu_write(cpu, 0x0100 + cpu->stkp, progCounter & 0x00FF);
+	cpu->stkp = cpu->stkp - 1;
+
+	cpu->pc = cpu->addr_abs;
+
+	return 0;
+}
