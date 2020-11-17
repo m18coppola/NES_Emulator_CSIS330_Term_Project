@@ -211,6 +211,20 @@ CPY(CPU* cpu) {
 	return 0;
 }
 
+/* Decrement Memory by one */
+/*
+ * Decrements the fetched memory by one.
+ */
+unsigned char
+DEC(CPU* cpu) {
+	cpu->fetched = (cpu->fetched - 1) & 0xFF;
+
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
 /* Increment Y */
 /*
  * Increments the Y register.flagToSet = C;
