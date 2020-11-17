@@ -166,6 +166,21 @@ CLV(CPU* cpu) {
 	return 0;
 }
 
+/* Compare A with Memory */
+/*
+ * Compares the Accumulator register with the fetched memory.
+ */
+unsigned char
+CMP(CPU* cpu) {
+	unsigned char result = cpu->a - cpu->fetched;
+
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, Z, result == 0x00);
+	cpu_setFlag(cpu, C, A >= cpu->fetched);
+
+	return 1;
+}
+
 /* Increment Y */
 /*
  * Increments the Y register.flagToSet = C;
