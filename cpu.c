@@ -271,6 +271,34 @@ DEC(CPU* cpu) {
 	return 0;
 }
 
+/* Decrement X by one */
+/*
+ * Decrements the X register by one.
+ */
+unsigned char
+DEX(CPU* cpu) {
+	cpu->x = (cpu->x - 1);
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 0;
+}
+
+/* Decrement Y by one */
+/*
+ * Decrements the Y register by one.
+ */
+unsigned char
+DEY(CPU* cpu) {
+	cpu->y = (cpu->y - 1);
+
+	cpu_setFlag(cpu, N, cpu->y & 0x80);
+	cpu_setFlag(cpu, Z, cpu->y == 0x00);
+
+	return 0;
+}
+
 /* Increment Y */
 /*
  * Increments the Y register.flagToSet = C;
