@@ -108,6 +108,26 @@ IMP(CPU* cpu)
  *
  */
 
+/* Add Memory to A with Carry */
+/*
+ * Adds the fetched memory to the Accumulator register and the carry bit.
+ */
+unsigned char 
+ADC(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char result = cpu->a + cpu->fetched + cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, V, (cpu->a & 0x80) != (result & 0x80));
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, result == 0);
+
+	// TODO - Implement the proper functionality for ADC regarding overflow.
+	// Not finished.
+
+	return 1;
+}
+
 /* And Memory with Accumulator */
 /*
  * The Accumulator register is set to the result of a bitwise and between
@@ -172,6 +192,8 @@ CLV(CPU* cpu) {
  */
 unsigned char
 CMP(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	unsigned char result = cpu->a - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
@@ -187,6 +209,8 @@ CMP(CPU* cpu) {
  */
 unsigned char
 CPX(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	unsigned char result = cpu->x - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
@@ -202,6 +226,8 @@ CPX(CPU* cpu) {
  */
 unsigned char
 CPY(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	unsigned char result = cpu->y - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
@@ -217,6 +243,8 @@ CPY(CPU* cpu) {
  */
 unsigned char
 DEC(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->fetched = (cpu->fetched - 1) & 0xFF;
 
 	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
