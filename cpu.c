@@ -357,3 +357,14 @@ INY(CPU* cpu) {
 
 	return 0;
 }
+
+/* Jump to Address */
+/*
+ * Sets the program counter to the fetched memory value.
+ */
+unsigned char 
+JMP(CPU* cpu) {
+	cpu->pc = cpu->fetched;
+
+	return 0;
+}
