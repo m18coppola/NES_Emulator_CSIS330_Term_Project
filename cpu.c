@@ -125,14 +125,10 @@ AND(CPU* cpu) {
 /* Clear Carry Flag */
 /*
  * Clears the carry flag in the status register.
- * 
  */
 unsigned char 
 CLC(CPU* cpu) {
-	STATUS_FLAG carryFlag;
-
-	carryFlag = C;
-	cpu_setFlag(cpu, carryFlag, false);
+	cpu_setFlag(cpu, C, false);
 
 	return 0;
 }
@@ -140,14 +136,10 @@ CLC(CPU* cpu) {
 /* Clear Decimal Mode */
 /*
  * Clears the decimal mode flag in the status register.
- * 
  */
 unsigned char 
 CLD(CPU* cpu) {
-	STATUS_FLAG decimalFlag;
-
-	decimalFlag = D;
-	cpu_setFlag(cpu, decimalFlag, false);
+	cpu_setFlag(cpu, D, false);
 
 	return 0;
 }
@@ -155,14 +147,10 @@ CLD(CPU* cpu) {
 /* Clear Interrupt Disable Bit */
 /*
  * Clears the interrupt flag in the status register.
- *
  */
 unsigned char
 CLI(CPU* cpu) {
-	STATUS_FLAG interruptFlag;
-
-	interruptFlag = D;
-	cpu_setFlag(cpu, interruptFlag, false);
+	cpu_setFlag(cpu, I, false);
 
 	return 0;
 }
@@ -170,14 +158,10 @@ CLI(CPU* cpu) {
 /* Clear Overflow Flag */
 /*
  * Clears the overflow flag in the status register.
- *
  */
 unsigned char
 CLV(CPU* cpu) {
-	STATUS_FLAG overflowFlag;
-
-	overflowFlag = D;
-	cpu_setFlag(cpu, overflowFlag, false);
+	cpu_setFlag(cpu, V, false);
 
 	return 0;
 }
