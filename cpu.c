@@ -175,7 +175,7 @@ CMP(CPU* cpu) {
 	unsigned char result = cpu->a - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
-	cpu_setFlag(cpu, C, A >= cpu->fetched);
+	cpu_setFlag(cpu, C, cpu->a >= cpu->fetched);
 	cpu_setFlag(cpu, Z, result == 0x00);
 
 	return 1;
@@ -190,7 +190,7 @@ CPX(CPU* cpu) {
 	unsigned char result = cpu->x - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
-	cpu_setFlag(cpu, C, X >= cpu->fetched);
+	cpu_setFlag(cpu, C, cpu->x >= cpu->fetched);
 	cpu_setFlag(cpu, Z, result == 0x00);
 
 	return 0;
@@ -205,7 +205,7 @@ CPY(CPU* cpu) {
 	unsigned char result = cpu->y - cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x80);
-	cpu_setFlag(cpu, C, Y >= cpu->fetched);
+	cpu_setFlag(cpu, C, cpu->y >= cpu->fetched);
 	cpu_setFlag(cpu, Z, result == 0x00);
 
 	return 0;
