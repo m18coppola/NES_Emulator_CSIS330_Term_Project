@@ -560,3 +560,36 @@ SEI(CPU* cpu) {
 
 	return 0;
 }
+
+/* Store A in Memory */
+/*
+ * Sets fetched data to the contents Accumulator register.
+ */
+unsigned char 
+STA(CPU* cpu) {
+	cpu->fetched = cpu->a;
+
+	return 1;
+}
+
+/* Store X in Memory */
+/*
+ * Sets fetched data to the contents X register.
+ */
+unsigned char 
+STX(CPU* cpu) {
+	cpu->fetched = cpu->x;
+
+	return 1;
+}
+
+/* Store Y in Memory */
+/*
+ * Sets fetched data to the contents Y register.
+ */
+unsigned char 
+STY(CPU* cpu) {
+	cpu->fetched = cpu->y;
+
+	return 1;
+}
