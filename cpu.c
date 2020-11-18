@@ -386,3 +386,45 @@ JSR(CPU* cpu) {
 
 	return 0;
 }
+
+/* Load A with Memory */
+/*
+ * Loads the Accumulator with the fetched data from memory.
+ */
+unsigned char 
+LDA(CPU* cpu) {
+	cpu->a = cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 1;
+}
+
+/* Load X with Memory */
+/*
+ * Loads the X register with the fetched data from memory.
+ */
+unsigned char 
+LDX(CPU* cpu) {
+	cpu->x = cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 1;
+}
+
+/* Load Y with Memory */
+/*
+ * Loads the Y register with the fetched data from memory.
+ */
+unsigned char 
+LDY(CPU* cpu) {
+	cpu->y = cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->y & 0x80);
+	cpu_setFlag(cpu, Z, cpu->y == 0x00);
+
+	return 1;
+}
