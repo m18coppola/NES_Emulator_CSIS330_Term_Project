@@ -144,7 +144,8 @@ AND(CPU* cpu) {
 
 /* Arithmetic Shift Left */
 /*
- * Shifts the referenced byte (fetched memory or register) one bit.
+ * Shifts the referenced byte (fetched memory or register) one bit with 
+ * the leftmost bit being placed into the carry register.
  */
 unsigned char 
 ASL(CPU* cpu) {
@@ -364,6 +365,8 @@ INY(CPU* cpu) {
  */
 unsigned char 
 JMP(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->pc = cpu->fetched;
 
 	return 0;
@@ -393,6 +396,8 @@ JSR(CPU* cpu) {
  */
 unsigned char 
 LDA(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->a = cpu->fetched;
 
 	cpu_setFlag(cpu, N, cpu->a & 0x80);
@@ -407,6 +412,8 @@ LDA(CPU* cpu) {
  */
 unsigned char 
 LDX(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->x = cpu->fetched;
 
 	cpu_setFlag(cpu, N, cpu->x & 0x80);
@@ -421,10 +428,31 @@ LDX(CPU* cpu) {
  */
 unsigned char 
 LDY(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->y = cpu->fetched;
 
 	cpu_setFlag(cpu, N, cpu->y & 0x80);
 	cpu_setFlag(cpu, Z, cpu->y == 0x00);
+
+	return 1;
+}
+
+/* Logical Shift Right */
+/*
+ * Shifts the referenced byte one bit to the right with the rightmost bit
+ * being placed into the carry register.
+ */
+unsigned char 
+LSR(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu_setFlag(cpu, N, false);
+	cpu_setFlag(cpu, C, cpu->fetched & 0x01);
+
+	cpu->fetched = (cpu->fetched >> 1) & 0x7F;
+
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
 
 	return 1;
 }
