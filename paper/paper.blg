@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2020/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: paper.aux
+The style file: abbrv.bst
+Database file #1: references.bib
+Warning--to sort, need author or key in nesdev_CPU
+Warning--to sort, need author or key in wikipediaNES
+You've used 2 entries,
+            2118 wiz_defined-function locations,
+            508 strings with 3915 characters,
+and the built_in function-call counts, 364 in all, are:
+= -- 36
+> -- 2
+< -- 0
++ -- 2
+- -- 0
+* -- 14
+:= -- 49
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 6
+chr.to.int$ -- 0
+cite$ -- 4
+duplicate$ -- 14
+empty$ -- 47
+format.name$ -- 0
+if$ -- 87
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 0
+newline$ -- 13
+num.names$ -- 0
+pop$ -- 16
+preamble$ -- 1
+purify$ -- 4
+quote$ -- 0
+skip$ -- 12
+stack$ -- 0
+substring$ -- 10
+swap$ -- 2
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 8
+warning$ -- 2
+while$ -- 0
+width$ -- 3
+write$ -- 22
+(There were 2 warnings)
