@@ -42,3 +42,5 @@ clean::
 	$(LATEXSOURCE).aux $(LATEXSOURCE).blg $(LATEXSOURCE).log \
 	$(LATEXSOURCE).bbl $(LATEXSOURCE).pdf
 
+display::
+	xdg-open $(LATEXSOURCE).pdf

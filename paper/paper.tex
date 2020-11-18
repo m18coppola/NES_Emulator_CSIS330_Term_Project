@@ -7,6 +7,7 @@
 \usepackage{epsfig}        % wrapper for graphicx package
 \usepackage{times}
 \usepackage{url}
+\usepackage{listings}
 
 % margin settings borrowed from Dr. Teresco's example paper
 \setlength{\topmargin}{-0.5in}
@@ -74,6 +75,8 @@ Official operations of the 6502 only need to be calculated, and not emulated. We
 the output of the operations immediately, and then waiting the number of clock cycles that operation
 took to execute.
 
+Overview to be continued...
+
 \section{Bitwise Operations}
 \label{sec:bitwise}
 Bitwise operations are major aspect of making an efficient emulator. Supose we have an 8-bit value.
@@ -86,12 +89,16 @@ bitwise operations.
 To extract information from a binary number, we would first need to isolate that information. We can
 achieve this by using a bitmask. We can create a bitmask by creating a new 8-bit number that has
 1's placed over the important digits, and 0's on digits that are not. With this mask, we can use a
-bitwise AND operation ( \& ) and have a result that only includes the digits defined by the bitmask.
+bitwise AND operation ( \lstinline{&} ) and have a result that only includes the digits defined by the bitmask~\cite{bitmasks}.
 
-Inorder to make this value useful to us, we may have to then use a bitwise shift-left (>>) to push
+Inorder to make this value useful to us, we may have to then use a bitwise shift-left ( \lstinline{>>} ) to push
 the important digits to the least signifigant order of the digit. By doing this, the entirety of the
 resulting 8-bit value numerically represents the value stored in the section of the original 8-bit
-value.
+value~\cite{bitmasks}.
+
+A similar process is used for setting bits as well. We create a bitmask for the bits we want to set
+and or it with our value. To unset, we can \lstinline{&} with the inverse ( \lstinline{~} ) of our mask.
+We can toggle/flip bits with a mask that is XOR'd ( \lstinline{^} ) with our value.
 
 \singlespace
 

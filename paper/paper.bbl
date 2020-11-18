@@ -11,4 +11,12 @@ Nintendo entertainment system.
   2020.
 \newblock Accessed: 2020-11-17.
 
+\bibitem{bitmasks}
+O.~Lawlor.
+\newblock Bits and bitwise operators.
+\newblock
+  \url{https://www.cs.uaf.edu/courses/cs301/2014-fall/notes/bits-bitwise/},
+  2014.
+\newblock Accessed: 2020-11-17.
+
 \end{thebibliography}
