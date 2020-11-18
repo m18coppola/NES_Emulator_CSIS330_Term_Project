@@ -2,3 +2,6 @@
 emu
 vgcore.*
 *.save
+*.dvi
+*.aux
+*.log
