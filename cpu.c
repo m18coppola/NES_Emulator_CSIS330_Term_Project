@@ -113,6 +113,8 @@ IMP(CPU* cpu)
 /* Add Memory to A with Carry */
 /*
  * Adds the fetched memory to the Accumulator register and the carry bit.
+ * This would include a check regarding alternate functionality using Binary Coded 
+ * Decimals, but decimal mode is not used in the NES so it is not included.
  */
 unsigned char 
 ADC(CPU* cpu) {
@@ -176,7 +178,7 @@ CLC(CPU* cpu) {
 
 /* Clear Decimal Mode */
 /*
- * Clears the decimal mode flag in the status register.
+ * Clears the decimal mode flag in the status register. (Decimal Mode not used in NES)
  */
 unsigned char 
 CLD(CPU* cpu) {
@@ -522,6 +524,39 @@ ROR(CPU* cpu) {
 	cpu_setFlag(cpu, C, rotator);
 	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
 	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
+/* Set Carry Flag */
+/*
+ * Sets the Carry flag to true.
+ */
+unsigned char 
+SEC(CPU* cpu) {
+	cpu_setFlag(cpu, C, true);
+
+	return 0;
+}
+
+/* Set Decimal Mode Flag */
+/*
+ * Sets the Decimal Mode flag to true. (Decimal Mode not used in NES)
+ */
+unsigned char 
+SED(CPU* cpu) {
+	cpu_setFlag(cpu, D, true);
+
+	return 0;
+}
+
+/* Set Interrupt Flag */
+/*
+ * Sets the Interrupt flag to true. 
+ */
+unsigned char 
+SEI(CPU* cpu) {
+	cpu_setFlag(cpu, I, true);
 
 	return 0;
 }
