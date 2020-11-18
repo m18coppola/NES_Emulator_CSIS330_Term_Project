@@ -1,5 +1,7 @@
 #include "cpu.h"
 
+# define UNUSED(x) (void)(x)
+
 /* Reads a byte from the input address. */
 unsigned char
 cpu_read(CPU* cpu, unsigned short addr) 
@@ -111,6 +113,8 @@ IMP(CPU* cpu)
 /* Add Memory to A with Carry */
 /*
  * Adds the fetched memory to the Accumulator register and the carry bit.
+ * This would include a check regarding alternate functionality using Binary Coded 
+ * Decimals, but decimal mode is not used in the NES so it is not included.
  */
 unsigned char 
 ADC(CPU* cpu) {
@@ -144,7 +148,8 @@ AND(CPU* cpu) {
 
 /* Arithmetic Shift Left */
 /*
- * Shifts the referenced byte (fetched memory or register) one bit.
+ * Shifts the referenced byte (fetched memory or register) one bit with 
+ * the leftmost bit being placed into the carry register.
  */
 unsigned char 
 ASL(CPU* cpu) {
@@ -173,7 +178,7 @@ CLC(CPU* cpu) {
 
 /* Clear Decimal Mode */
 /*
- * Clears the decimal mode flag in the status register.
+ * Clears the decimal mode flag in the status register. (Decimal Mode not used in NES)
  */
 unsigned char 
 CLD(CPU* cpu) {
@@ -364,6 +369,8 @@ INY(CPU* cpu) {
  */
 unsigned char 
 JMP(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->pc = cpu->fetched;
 
 	return 0;
@@ -384,5 +391,286 @@ JSR(CPU* cpu) {
 
 	cpu->pc = cpu->addr_abs;
 
+	return 0;
+}
+
+/* Load A with Memory */
+/*
+ * Loads the Accumulator with the fetched data from memory.
+ */
+unsigned char 
+LDA(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu->a = cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 1;
+}
+
+/* Load X with Memory */
+/*
+ * Loads the X register with the fetched data from memory.
+ */
+unsigned char 
+LDX(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu->x = cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 1;
+}
+
+/* Load Y with Memory */
+/*
+ * Loads the Y register with the fetched data from memory.
+ */
+unsigned char 
+LDY(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu->y = cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->y & 0x80);
+	cpu_setFlag(cpu, Z, cpu->y == 0x00);
+
+	return 1;
+}
+
+/* Logical Shift Right */
+/*
+ * Shifts the referenced byte one bit to the right with the rightmost bit
+ * being placed into the carry register.
+ */
+unsigned char 
+LSR(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu_setFlag(cpu, N, false);
+	cpu_setFlag(cpu, C, cpu->fetched & 0x01);
+
+	cpu->fetched = (cpu->fetched >> 1) & 0x7F;
+
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
+/* No Operation */
+/*
+ * Does nothing.
+ */
+unsigned char 
+NOP(CPU* cpu) {
+	UNUSED(cpu);
+	return 0;
+}
+
+/* Bitwise Or A with Memory */
+/*
+ * The Accumulator register is set to the result of a bitwise or of the Accumulator 
+ * register and the fetched data.
+ */
+unsigned char 
+ORA(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu->a = cpu->a | cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 1;
+}
+
+/* Rotate Left */
+/*
+ * Rotates the referenced byte left. This sets the carry bit to the last bit of the 
+ * referenced byte and sets the first bit of it to the former value of the carry flag.
+ */
+unsigned char 
+ROL(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char rotator = cpu->fetched & 0x80;
+	cpu->fetched = (cpu->fetched << 1) & 0xFE;
+	cpu->fetched = cpu->fetched | cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, C, rotator);
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
+/* Rotate Right */
+/*
+ * Rotates the referenced byte right. This sets the carry bit to the first bit of the 
+ * referenced byte and sets the last bit of it to the former value of the carry flag.
+ */
+unsigned char 
+ROR(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char rotator = cpu->fetched & 0x01;
+	cpu->fetched = (cpu->fetched >> 1) & 0x7F;
+	cpu->fetched = cpu->fetched | cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, C, rotator);
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
+/* Set Carry Flag */
+/*
+ * Sets the Carry flag to true.
+ */
+unsigned char 
+SEC(CPU* cpu) {
+	cpu_setFlag(cpu, C, true);
+
+	return 0;
+}
+
+/* Set Decimal Mode Flag */
+/*
+ * Sets the Decimal Mode flag to true. (Decimal Mode not used in NES)
+ */
+unsigned char 
+SED(CPU* cpu) {
+	cpu_setFlag(cpu, D, true);
+
+	return 0;
+}
+
+/* Set Interrupt Flag */
+/*
+ * Sets the Interrupt flag to true. 
+ */
+unsigned char 
+SEI(CPU* cpu) {
+	cpu_setFlag(cpu, I, true);
+
+	return 0;
+}
+
+/* Store A in Memory */
+/*
+ * Sets fetched data to the contents Accumulator register.
+ */
+unsigned char 
+STA(CPU* cpu) {
+	cpu->fetched = cpu->a;
+
+	return 1;
+}
+
+/* Store X in Memory */
+/*
+ * Sets fetched data to the contents X register.
+ */
+unsigned char 
+STX(CPU* cpu) {
+	cpu->fetched = cpu->x;
+
+	return 1;
+}
+
+/* Store Y in Memory */
+/*
+ * Sets fetched data to the contents Y register.
+ */
+unsigned char 
+STY(CPU* cpu) {
+	cpu->fetched = cpu->y;
+
+	return 1;
+}
+
+/* Transfer A to X */
+/*
+ * Sets the X register to the contents of the Accumulator.
+ */
+unsigned char 
+TAX(CPU* cpu) {
+	cpu->x = cpu->a;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 0;
+}
+
+/* Transfer A to Y */
+/*
+ * Sets the Y register to the contents of the Accumulator.
+ */
+unsigned char 
+TAY(CPU* cpu) {
+	cpu->y = cpu->a;
+
+	cpu_setFlag(cpu, N, cpu->y & 0x80);
+	cpu_setFlag(cpu, Z, cpu->y == 0x00);
+
+	return 0;
+}
+
+/* Transfer Stack Pointer to X */
+/*
+ * Sets the X register to the value of the stack pointer.
+ */
+unsigned char 
+TSX(CPU* cpu) {
+	cpu->x = cpu->stkp;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 0;
+}
+
+/* Transfer X to A */
+/*
+ * Sets the Accumulator to the contents of the X register.
+ */
+unsigned char 
+TXA(CPU* cpu) {
+	cpu->a = cpu->x;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 0;
+}
+
+/* Transfer X to Stack Pointer */
+/*
+ * Sets the Stack Pointer to the contents of the X register.
+ */
+unsigned char 
+TXS(CPU* cpu) {
+	cpu->stkp = cpu->x;
+
+	return 0;
+}
+
+/* Transfer Y to A */
+/*
+ * Sets the Accumulator to the contents of the Y register.
+ */
+unsigned char 
+TYA(CPU* cpu) {
+	cpu->a = cpu->y;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+	
 	return 0;
 }
