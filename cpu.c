@@ -1,5 +1,7 @@
 #include "cpu.h"
 
+# define UNUSED(x) (void)(x)
+
 /* Reads a byte from the input address. */
 unsigned char
 cpu_read(CPU* cpu, unsigned short addr) 
@@ -454,7 +456,7 @@ LSR(CPU* cpu) {
 
 	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
 
-	return 1;
+	return 0;
 }
 
 /* No Operation */
@@ -463,5 +465,23 @@ LSR(CPU* cpu) {
  */
 unsigned char 
 NOP(CPU* cpu) {
+	UNUSED(cpu);
 	return 0;
+}
+
+/* Bitwise Or A with Memory */
+/*
+ * The Accumulator register is set to the result of a bitwise or of the Accumulator 
+ * register and the fetched data.
+ */
+unsigned char 
+ORA(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	cpu->a = cpu->a | cpu->fetched;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 1;
 }
