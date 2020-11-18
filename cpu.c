@@ -593,3 +593,84 @@ STY(CPU* cpu) {
 
 	return 1;
 }
+
+/* Transfer A to X */
+/*
+ * Sets the X register to the contents of the Accumulator.
+ */
+unsigned char 
+TAX(CPU* cpu) {
+	cpu->x = cpu->a;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 0;
+}
+
+/* Transfer A to Y */
+/*
+ * Sets the Y register to the contents of the Accumulator.
+ */
+unsigned char 
+TAY(CPU* cpu) {
+	cpu->y = cpu->a;
+
+	cpu_setFlag(cpu, N, cpu->y & 0x80);
+	cpu_setFlag(cpu, Z, cpu->y == 0x00);
+
+	return 0;
+}
+
+/* Transfer Stack Pointer to X */
+/*
+ * Sets the X register to the value of the stack pointer.
+ */
+unsigned char 
+TSX(CPU* cpu) {
+	cpu->x = cpu->stkp;
+
+	cpu_setFlag(cpu, N, cpu->x & 0x80);
+	cpu_setFlag(cpu, Z, cpu->x == 0x00);
+
+	return 0;
+}
+
+/* Transfer X to A */
+/*
+ * Sets the Accumulator to the contents of the X register.
+ */
+unsigned char 
+TXA(CPU* cpu) {
+	cpu->a = cpu->x;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+
+	return 0;
+}
+
+/* Transfer X to Stack Pointer */
+/*
+ * Sets the Stack Pointer to the contents of the X register.
+ */
+unsigned char 
+TXS(CPU* cpu) {
+	cpu->stkp = cpu->x;
+
+	return 0;
+}
+
+/* Transfer Y to A */
+/*
+ * Sets the Accumulator to the contents of the Y register.
+ */
+unsigned char 
+TYA(CPU* cpu) {
+	cpu->a = cpu->y;
+
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+	
+	return 0;
+}
