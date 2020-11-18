@@ -485,3 +485,43 @@ ORA(CPU* cpu) {
 
 	return 1;
 }
+
+/* Rotate Left */
+/*
+ * Rotates the referenced byte left. This sets the carry bit to the last bit of the 
+ * referenced byte and sets the first bit of it to the former value of the carry flag.
+ */
+unsigned char 
+ROL(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char rotator = cpu->fetched & 0x80;
+	cpu->fetched = (cpu->fetched << 1) & 0xFE;
+	cpu->fetched = cpu->fetched | cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, C, rotator);
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
+
+/* Rotate Right */
+/*
+ * Rotates the referenced byte right. This sets the carry bit to the first bit of the 
+ * referenced byte and sets the last bit of it to the former value of the carry flag.
+ */
+unsigned char 
+ROR(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char rotator = cpu->fetched & 0x01;
+	cpu->fetched = (cpu->fetched >> 1) & 0x7F;
+	cpu->fetched = cpu->fetched | cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, C, rotator);
+	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
+	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+
+	return 0;
+}
