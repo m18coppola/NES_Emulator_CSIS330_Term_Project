@@ -456,3 +456,12 @@ LSR(CPU* cpu) {
 
 	return 1;
 }
+
+/* No Operation */
+/*
+ * Does nothing.
+ */
+unsigned char 
+NOP(CPU* cpu) {
+	return 0;
+}
