@@ -1,0 +1,22 @@
+\begin{thebibliography}{1}
+
+\bibitem{nesdev_CPU}
+Cpu.
+\newblock \url{wiki.nesdev.com/w/index.php/CPU}, 2019.
+\newblock Accessed: 2020-11-17.
+
+\bibitem{wikipediaNES}
+Nintendo entertainment system.
+\newblock \url{https://en.wikipedia.org/wiki/Nintendo_Entertainment_System},
+  2020.
+\newblock Accessed: 2020-11-17.
+
+\bibitem{bitmasks}
+O.~Lawlor.
+\newblock Bits and bitwise operators.
+\newblock
+  \url{https://www.cs.uaf.edu/courses/cs301/2014-fall/notes/bits-bitwise/},
+  2014.
+\newblock Accessed: 2020-11-17.
+
+\end{thebibliography}

@@ -32,9 +32,9 @@ struct cpu {
 	Bus* bus;
 
 	/* Intermediate CPU States */
-	unsigned char fetched;   /* Input value to ALU */
+	unsigned char fetched;   /* memory fetched from address */
 	unsigned short addr_abs; /* Current observed address */
-	unsigned short addr_rel; /* Relative address */
+	unsigned short addr_rel; /* Relative address in page */
 	unsigned char opcode;    /* Current operation */
 	unsigned char cycles;    /* Number of clock cycles the opcode takes */
 };
