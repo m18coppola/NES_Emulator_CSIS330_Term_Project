@@ -433,7 +433,7 @@ BCS(CPU* cpu) {
 	return 0;
 }
 
-/* Branch if Equal (to Zero)*/
+/* Branch if Equal (to Zero) */
 /*
  * Branches by adding the referenced displacement to the program counter
  * if the zero flag is set. 
@@ -453,6 +453,24 @@ BEQ(CPU* cpu) {
 
 		cpu->pc = cpu->addr_abs;
 	}
+
+	return 0;
+}
+
+/* Bit Test*/
+/*
+ * Tests if one or more bits are set in the referenced memory location.
+ * The bit-mask in the Accumulator and 
+ */
+unsigned char 
+BIT(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char result = cpu->a & cpu->fetched;
+
+	cpu_setFlag(cpu, Z, (result & 0xFF) == 0x00);
+	cpu_setFlag(cpu, N, cpu->fetched & (0x01 << 7));
+	cpu_setFlag(cpu, V, cpu->fetched & (0x01 << 6));
 
 	return 0;
 }
