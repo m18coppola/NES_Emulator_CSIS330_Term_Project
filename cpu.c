@@ -98,6 +98,18 @@ IMP(CPU* cpu)
 	return 0;
 }
 
+/* Immediate Adressing */
+/* 
+ * expect the next byte to be used as the value
+ */
+unsigned char
+IMM(CPU* cpu)
+{
+	cpu->addr_abs = cpu->pc;
+	cpu->pc++;
+	return 0;
+}
+
 /* Zero Page */
 /* 
  * pages memory from the very first page (0x00??)
