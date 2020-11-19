@@ -322,11 +322,7 @@ IZY(CPU* cpu)
 /* 
  *
  * Operations
- * 
- * 1) fetch memory
- * 2) implement opcode
- * 3) set flags
- * 4) return the possibility of extra clock cycles
+ *
  *
  */
 
@@ -340,14 +336,14 @@ unsigned char
 ADC(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	unsigned char result = cpu->a + cpu->fetched + cpu_getFlag(cpu, C);
+	int result = cpu->a + cpu->fetched + cpu_getFlag(cpu, C);
 
-	cpu_setFlag(cpu, V, (cpu->a & 0x80) != (result & 0x80));
-	cpu_setFlag(cpu, N, cpu->a & 0x80);
-	cpu_setFlag(cpu, Z, result == 0X00);
+	cpu_setFlag(cpu, C, result > 255);
+	cpu_setFlag(cpu, V, (~(cpu->a ^ cpu->fetched) & (cpu->a ^ result) & 0x0080));
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0X00);
 
-	// TODO - Implement the proper functionality for ADC regarding overflow.
-	// Not finished.
+	cpu->a = result & 0x00FF;
 
 	return 1;
 }
