@@ -396,11 +396,11 @@ unsigned char
 BCC(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, C) == 0) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -420,11 +420,11 @@ unsigned char
 BCS(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, C) == 1) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -444,11 +444,11 @@ unsigned char
 BEQ(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, Z) == 1) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -488,11 +488,11 @@ unsigned char
 BMI(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, N) == 1) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -512,11 +512,11 @@ unsigned char
 BNE(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, Z) == 0) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -536,15 +536,41 @@ unsigned char
 BPL(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, N) == 0) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
 	}
+
+	return 0;
+}
+
+/* Force Interrupt */
+/*
+ * Breaks by forcing an interrupt request.
+ * It pushes the program counter to the stack and takes the IRQ interrupt
+ * vector from the end of memory. 
+ */
+unsigned char 
+BRK(CPU* cpu) {
+	cpu->pc++;
+
+	cpu_setFlag(cpu, I, 1);
+	cpu_write(cpu, 0x0100 + cpu->stkp, (cpu->pc >> 8) & 0x00FF);
+	cpu->pc--;
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->pc & 0x00FF);
+	cpu->pc--;
+
+	cpu_setFlag(cpu, B, 1);
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status);
+	cpu->pc--;
+	cpu_setFlag(cpu, B, 0);
+
+	cpu->pc = (cpu_read(cpu, 0xFFFE) | (cpu_read(cpu, 0xFFFF) << 8));
 
 	return 0;
 }
@@ -773,7 +799,7 @@ INC(CPU* cpu) {
  */
 unsigned char 
 INX(CPU* cpu) {
-	cpu->x = cpu->x + 1;
+	cpu->x++;
 
 	cpu_setFlag(cpu, N, cpu->x & 0x80);
 	cpu_setFlag(cpu, Z, cpu->x == 0x00);
@@ -787,7 +813,7 @@ INX(CPU* cpu) {
  */
 unsigned char 
 INY(CPU* cpu) {
-	cpu->y = cpu->y + 1;
+	cpu->y++;
 
 	cpu_setFlag(cpu, N, cpu->y & 0x80);
 	cpu_setFlag(cpu, Z, cpu->y == 0x00);
@@ -817,9 +843,9 @@ JSR(CPU* cpu) {
 	unsigned short progCounter = cpu->pc - 1;
 
 	cpu_write(cpu, 0x0100 + cpu->stkp, progCounter >> 8 & 0x00FF);
-	cpu->stkp = cpu->stkp - 1;
+	cpu->stkp--;
 	cpu_write(cpu, 0x0100 + cpu->stkp, progCounter & 0x00FF);
-	cpu->stkp = cpu->stkp - 1;
+	cpu->stkp--;
 
 	cpu->pc = cpu->addr_abs;
 
