@@ -377,15 +377,17 @@ ASL(CPU* cpu) {
 /*
  * Branches by adding the referenced displacement to the program counter
  * if the carry bit is clear. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
  */
 unsigned char 
 BCC(CPU* cpu) {
 
-	if (cpu_getFlag(cpu, C) == 1) {
+	if (cpu_getFlag(cpu, C) == 0) {
 		cpu->cycles = cpu->cycles + 1;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-		if ((cpu->addr_abs & 0xFF00) 1= (cpu->pc & 0xFF00)) {
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
 			cpu->cycles = cpu->cycles + 1;
 		}
 
@@ -399,6 +401,8 @@ BCC(CPU* cpu) {
 /*
  * Branches by adding the referenced displacement to the program counter
  * if the carry bit is set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
  */
 unsigned char 
 BCS(CPU* cpu) {
@@ -407,7 +411,151 @@ BCS(CPU* cpu) {
 		cpu->cycles = cpu->cycles + 1;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-		if ((cpu->addr_abs & 0xFF00) 1= (cpu->pc & 0xFF00)) {
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Equal (to Zero)*/
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the zero flag is set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
+ */
+unsigned char 
+BEQ(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, Z) == 1) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Minus */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the negative flag is set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
+ */
+unsigned char 
+BMI(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, N) == 1) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Not Equal (to Zero) */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the zero flag is set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
+ */
+unsigned char 
+BNE(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, Z) == 0) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Positive */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the negative flag is not set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
+ */
+unsigned char 
+BPL(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, N) == 0) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Overflow Clear */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the overflow flag is not set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
+ */
+unsigned char 
+BVC(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, V) == 0) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Overflow Set */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the overflow flag is set. 
+ * Adds extra clock cycle directly and will add another if a page boundary 
+ * is crossed.
+ */
+unsigned char 
+BVS(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, V) == 1) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
 			cpu->cycles = cpu->cycles + 1;
 		}
 
