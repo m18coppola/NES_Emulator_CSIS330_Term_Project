@@ -460,7 +460,9 @@ BEQ(CPU* cpu) {
 /* Bit Test*/
 /*
  * Tests if one or more bits are set in the referenced memory location.
- * The bit-mask in the Accumulator and 
+ * The bit-mask in the Accumulator and the referenced memory are used to set the
+ * zero register and the last two bits of the referenced memory are used to set 
+ * the negative and overflow flags.
  */
 unsigned char 
 BIT(CPU* cpu) {
