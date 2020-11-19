@@ -96,5 +96,5 @@ unsigned char XXX(CPU* cpu);
 
 INSTRUCTION lookup[] =
 {
-	#include "lookuptable.init"	
+	//include "lookuptable.init"	
 };
