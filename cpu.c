@@ -82,7 +82,8 @@ cpu_fetch(CPU* cpu)
 
 /* 
  * Addressing Modes:
- *
+ * loads memory into cpu intermediate states
+ * returns the number of additional clock cycles the addressing mode takes
  */
 
 /* Implied */
@@ -97,7 +98,214 @@ IMP(CPU* cpu)
 	return 0;
 }
 
+/* Zero Page */
+/* 
+ * pages memory from the very first page (0x00??)
+ * this allows for more memory in the instruction
+ */
+unsigned char
+ZP0(CPU* cpu)
+{
+	
+	cpu->addr_abs = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	cpu->addr_abs = cpu->addr_abs & 0x00FF;
+	return 0;
+}
 
+/* Zero Page with X as offset */
+/* 
+ * same as ZP0, but uses X register as an offset value.
+ * useful for iterating through memory
+ */
+unsigned char
+ZPX(CPU* cpu)
+{
+	cpu->addr_abs = cpu_read(cpu, cpu->pc + cpu->x);
+	cpu->pc++;
+	cpu->addr_abs = cpu->addr_abs & 0x00FF;
+	return 0;
+}
+
+/* Zero Page with Y as offset */
+/* 
+ * see ZPX
+ */
+unsigned char
+ZPY(CPU* cpu)
+{
+	cpu->addr_abs = cpu_read(cpu, cpu->pc + cpu->y);
+	cpu->pc++;
+	cpu->addr_abs = cpu->addr_abs & 0x00FF;
+	return 0;
+}
+
+/* Relative */
+/* 
+ * This addressing mode is for branching instructions.
+ */
+unsigned char
+REL(CPU* cpu)
+{
+	cpu->addr_rel = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	/* the address must be within -128 and 128
+ 	   you cannot branch to any address with the 6502 */
+
+	if (cpu->addr_rel & 0x80) { 
+		cpu->addr_rel = cpu->addr_rel | 0x00FF;
+	}
+
+	return 0;
+}
+
+/* Absolute */
+/* 
+ * load a 16 bit address
+ */
+unsigned char
+ABS(CPU* cpu)
+{
+	unsigned char hi, lo;
+
+	lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	cpu->addr_abs = (hi << 8) | lo;
+
+	return 0;
+}
+
+/* Absolute with X offset */
+/* 
+ * Absolute addressing but the contents of the X register are
+ * added to the address that is to be read from.
+ */
+unsigned char
+ABX(CPU* cpu)
+{
+	unsigned short lo, hi;
+
+	lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	cpu->addr_abs = (hi << 8) | lo;
+	cpu->addr_abs += cpu->x;
+
+	if ((cpu->addr_abs & 0xFF00) != (hi << 8)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/* Absolute with Y offset */
+/* 
+ * see ABX()
+ */
+unsigned char
+ABY(CPU* cpu)
+{
+	unsigned short lo, hi;
+
+	lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	cpu->addr_abs = (hi << 8) | lo;
+	cpu->addr_abs += cpu->y;
+
+	if ((cpu->addr_abs & 0xFF00) != (hi << 8)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/* Indirect addressing */
+/* 
+ * This addressing mode is similar to pointers. The read 16-bit
+ * address is used to fetch the actual 16-bit address.
+ *
+ * There is also a known hardware bug. If the lo byte of the input
+ * address is 0xFF, then we would typically cross a page boundary.
+ * This doesn't work. Instead, the address loop back to the beginning
+ * of the same page. NES programmers worked around this and even used
+ * it, so it's important that we simulate the same behavior.
+ */
+unsigned char
+IND(CPU* cpu)
+{
+	unsigned short p_lo, p_hi, p;
+
+	p_lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	p_hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	p = (p_hi << 8) | p_lo;
+
+	if (p_lo == 0x00FF) { /* hardware bug present */
+		cpu->addr_abs = (cpu_read(cpu, p & 0xFF00) << 8) | cpu_read(cpu, p);
+	} else {
+		cpu->addr_abs = (cpu_read(cpu, p + 1) << 8) | cpu_read(cpu, p);
+	}
+
+	return 0;
+}
+
+/* Indirect addressing with X offset */
+/* 
+ * The supplied address is offset by the X register to index the first page.
+ * The value at that index is used to address the memory
+ */
+unsigned char
+IZX(CPU* cpu)
+{
+	unsigned short t, lo, hi;
+	
+	t = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	lo = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 0)) & 0x00FF);
+	hi = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 1)) & 0x00FF);
+
+	cpu->addr_abs = (hi << 8) | lo;
+
+	return 0;
+}
+
+/* Indirect addressing with Y offset */
+/* 
+ * This functions differently than IZX.
+ * The supplied address indexes the first page for an address
+ * the address found at that index is offset by Y.
+ */
+unsigned char
+IZY(CPU* cpu)
+{
+	unsigned short t, lo, hi;
+
+	t = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	lo = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 0)) & 0x00FF);
+	hi = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 1)) & 0x00FF);
+
+	cpu->addr_abs = (hi << 8) | lo;
+	cpu->addr_abs += cpu->y;
+
+	if ((cpu->addr_abs & 0xFF00) != (hi << 8)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
 
 /* 
  *
