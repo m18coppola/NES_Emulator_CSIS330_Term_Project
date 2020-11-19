@@ -165,6 +165,50 @@ ASL(CPU* cpu) {
 	return 0;
 }
 
+/* Branch if Carry Clear */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the carry bit is clear. 
+ */
+unsigned char 
+BCC(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, C) == 1) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) 1= (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
+/* Branch if Carry Set */
+/*
+ * Branches by adding the referenced displacement to the program counter
+ * if the carry bit is set. 
+ */
+unsigned char 
+BCS(CPU* cpu) {
+
+	if (cpu_getFlag(cpu, C) == 1) {
+		cpu->cycles = cpu->cycles + 1;
+		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+		if ((cpu->addr_abs & 0xFF00) 1= (cpu->pc & 0xFF00)) {
+			cpu->cycles = cpu->cycles + 1;
+		}
+
+		cpu->pc = cpu->addr_abs;
+	}
+
+	return 0;
+}
+
 /* Clear Carry Flag */
 /*
  * Clears the carry flag in the status register.
@@ -674,3 +718,15 @@ TYA(CPU* cpu) {
 	
 	return 0;
 }
+
+/* Illegal Opcode Catch */
+/*
+ * Catches all illegal opcodes and executes no operation.
+ * (This is not truly accurate to the 6502 as the illegal opcodes
+ * still executed something even though it was not intended or reported.)
+ */
+ unsigned char
+ XXX(CPU* cpu) {
+	UNUSED(cpu);
+	return 0;
+ }
