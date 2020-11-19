@@ -8,6 +8,7 @@
 \usepackage{times}
 \usepackage{url}
 \usepackage{listings}
+\usepackage{subcaption}
 
 % margin settings borrowed from Dr. Teresco's example paper
 \setlength{\topmargin}{-0.5in}
@@ -27,6 +28,7 @@
   \protect\renewcommand\baselinestretch{1.5}
   \protect\normalsize
 }
+
 
 % begin typing document
 \begin{document}
@@ -79,17 +81,34 @@ Overview to be continued...
 
 \section{Bitwise Operations}
 \label{sec:bitwise}
+
 Bitwise operations are major aspect of making an efficient emulator. Supose we have an 8-bit value.
 We typically express this value as a number, or possibly two hexidecimal digits. One way the 6502 uses
-8-bit numbers is by defining parts of the binary expression as flags or smaller width values(fig. 1).
+8-bit numbers is by defining parts of the binary expression as flags or smaller width values, shown in figure~\ref{fig:figure1}.
 In emulation, it's important that we can extract information from this 8-bit number, as well as convert
 information we already have into information we can store into this number. To achive this, we use
 bitwise operations.
 
+% load figures
+\begin{figure}[b!]
+	\centering
+	\begin{subfigure}[b]{0.5\linewidth}
+		\includegraphics[width=\linewidth,bb=0 0 462 262]{figure1.PNG}
+		\caption{A single binary value representing multiple values.}
+		\label{fig:figure1}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.5\linewidth}
+		\includegraphics[width=\linewidth,bb=0 0 554 320]{figure2.PNG}
+		\caption{Using a bitmask to extract values from a binary number.}
+		\label{fig:figure2}
+	\end{subfigure}
+\end{figure}
+
+
 To extract information from a binary number, we would first need to isolate that information. We can
 achieve this by using a bitmask. We can create a bitmask by creating a new 8-bit number that has
 1's placed over the important digits, and 0's on digits that are not. With this mask, we can use a
-bitwise AND operation ( \lstinline{&} ) and have a result that only includes the digits defined by the bitmask~\cite{bitmasks}.
+bitwise AND operation ( \lstinline{&} ) and have a result that only includes the digits defined by the bitmask shown in figure~\ref{fig:figure2}~\cite{bitmasks}.
 
 Inorder to make this value useful to us, we may have to then use a bitwise shift-left ( \lstinline{>>} ) to push
 the important digits to the least signifigant order of the digit. By doing this, the entirety of the

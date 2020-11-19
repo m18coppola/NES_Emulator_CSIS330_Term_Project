@@ -2,8 +2,7 @@ C Bitwise Operations
 https://en.wikipedia.org/wiki/Bitwise_operations_in_C
 
 Bitmasks and manipulation
-http://theteacher.info/index.php/fundamentals-of-cs/2-logical-operatio
-ns/topics/2646-bitwise-manipulation-and-masks-and-or-xor
+http://theteacher.info/index.php/fundamentals-of-cs/2-logical-operations/topics/2646-bitwise-manipulation-and-masks-and-or-xor
 
 6502 Spec Sheet
 http://archive.6502.org/datasheets/rockwell_r65c00_microprocessors.pdf
