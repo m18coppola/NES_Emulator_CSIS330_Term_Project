@@ -249,6 +249,53 @@ IND(CPU* cpu)
 	return 0;
 }
 
+/* Indirect addressing with X offset */
+/* 
+ * The supplied address is offset by the X register to index the first page.
+ * The value at that index is used to address the memory
+ */
+unsigned char
+IZX(CPU* cpu)
+{
+	unsigned short t, lo, hi;
+	
+	t = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	lo = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 0)) & 0x00FF);
+	hi = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 1)) & 0x00FF);
+
+	cpu->addr_abs = (hi << 8) | lo;
+
+	return 0;
+}
+
+/* Indirect addressing with Y offset */
+/* 
+ * This functions differently than IZX.
+ * The supplied address indexes the first page for an address
+ * the address found at that index is offset by Y.
+ */
+unsigned char
+IZY(CPU* cpu)
+{
+	unsigned short t, lo, hi;
+
+	t = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	lo = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 0)) & 0x00FF);
+	hi = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 1)) & 0x00FF);
+
+	cpu->addr_abs = (hi << 8) | lo;
+	cpu->addr_abs += cpu->y;
+
+	if ((cpu->addr_abs & 0xFF00) != (hi << 8)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
 
 /* 
  *
