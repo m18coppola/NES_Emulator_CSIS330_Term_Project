@@ -158,12 +158,93 @@ ABS(CPU* cpu)
 {
 	unsigned char hi, lo;
 
-	lo = cpu_read(cpu->pc);
+	lo = cpu_read(cpu, cpu->pc);
 	cpu->pc++;
-	hi = cpu_read(cpu->pc);
+	hi = cpu_read(cpu, cpu->pc);
 	cpu->pc++;
 
 	cpu->addr_abs = (hi << 8) | lo;
+
+	return 0;
+}
+
+/* Absolute with X offset */
+/* 
+ * Absolute addressing but the contents of the X register are
+ * added to the address that is to be read from.
+ */
+unsigned char
+ABX(CPU* cpu)
+{
+	unsigned short lo, hi;
+
+	lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	cpu->addr_abs = (hi << 8) | lo;
+	cpu->addr_abs += cpu->x;
+
+	if ((cpu->addr_abs & 0xFF00) != (hi << 8)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/* Absolute with Y offset */
+/* 
+ * see ABX()
+ */
+unsigned char
+ABY(CPU* cpu)
+{
+	unsigned short lo, hi;
+
+	lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	cpu->addr_abs = (hi << 8) | lo;
+	cpu->addr_abs += cpu->y;
+
+	if ((cpu->addr_abs & 0xFF00) != (hi << 8)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/* Indirect addressing */
+/* 
+ * This addressing mode is similar to pointers. The read 16-bit
+ * address is used to fetch the actual 16-bit address.
+ *
+ * There is also a known hardware bug. If the lo byte of the input
+ * address is 0xFF, then we would typically cross a page boundary.
+ * This doesn't work. Instead, the address loop back to the beginning
+ * of the same page. NES programmers worked around this and even used
+ * it, so it's important that we simulate the same behavior.
+ */
+unsigned char
+IND(CPU* cpu)
+{
+	unsigned short p_lo, p_hi, p;
+
+	p_lo = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+	p_hi = cpu_read(cpu, cpu->pc);
+	cpu->pc++;
+
+	p = (p_hi << 8) | p_lo;
+
+	if (p_lo == 0x00FF) { /* hardware bug present */
+		cpu->addr_abs = (cpu_read(cpu, p & 0xFF00) << 8) | cpu_read(cpu, p);
+	} else {
+		cpu->addr_abs = (cpu_read(cpu, p + 1) << 8) | cpu_read(cpu, p);
+	}
 
 	return 0;
 }
