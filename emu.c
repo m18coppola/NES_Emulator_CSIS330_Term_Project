@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <getopt.h>
 
 #include "cpu.h"
 
@@ -10,6 +11,7 @@ void closeSDL();
 void startEmu();
 void drawMemory();
 void drawString();
+void usage(char* program);
 
 /* macros */
 #define TITLE "6502 Emulator"
@@ -168,15 +170,72 @@ drawString(char* chars, int x, int y)
 	SDL_DestroyTexture(stringTexture);
 	SDL_FreeSurface(string);
 }
+/*
+ * Usage Function
+ * Called when something isn't right with the command line parameters.
+ */
+ void
+ usage (char* program) {
+	 printf("Usage: %s [--file filename] [--viewportA] [--viewportB] \n", program);
+ }
 
 int
-main()
+main(int argc, char* argv[])
 {
+	/* Input File */
+	char file[FILENAME_MAX] = "default.txt";
+
+	/* Viewports */
+	char* viewportA = "0x0000";
+	char* viewportB = "0x0100";
+
+	/* Params for getopt */
+	int ch;
+	int option_index = 0;
+
+	/* Defines the options and their long/short equivalents. */
+	struct option longopts[] = {
+		{ "file", required_argument, NULL, 'f'},
+		{ "viewport-a", no_argument, NULL, 'a' },
+		{ "viewport-b", no_argument, NULL, 'b' }
+	};
+
 	/* loop flag */
 	int quit = 0;
 
 	/* Event handler */
 	SDL_Event e;
+
+	/* Processes the command-line parameters */
+	while ((ch = getopt_long(argc, argv, "f:a:b:", longopts, &option_index)) != -1) {
+		switch (ch) {
+
+			case 'a':
+				viewportA = optarg;
+				break;
+
+			case 'b':
+				viewportB = optarg;
+				break;
+
+			case 'f':
+				strcpy(file, optarg);
+				break;
+
+			default: 
+				usage(argv[0]);
+				return 1;
+		}
+	}
+
+	/* Makes sure the arguments were received. */
+	if (strcmp(file, "default.txt") == 0) {
+		fprintf(stderr, "Required file-name not specified.\n");
+    	usage(argv[0]);
+    	return 1;
+	}
+
+	printf("Variables: %s \n %s \n %s \n", file, viewportA, viewportB);
 	
 	startSDL();	
 
