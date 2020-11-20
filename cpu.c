@@ -996,13 +996,16 @@ unsigned char
 ROL(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	unsigned char rotator = cpu->fetched & 0x80;
-	cpu->fetched = (cpu->fetched << 1) & 0xFE;
-	cpu->fetched = cpu->fetched | cpu_getFlag(cpu, C);
-
-	cpu_setFlag(cpu, C, rotator);
-	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
-	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+	unsigned short rotator = (unsigned short)(cpu->fetched << 1) | cpu_getFlag(cpu, C);
+	cpu_setFlag(cpu, C, cpu->fetched & 0xFF00);
+	cpu_setFlag(cpu, Z, (rotator & 0x00FF) == 0x0000);
+	cpu_setFlag(cpu, N, rotator & 0x0080);
+	
+	if (lookup[cpu->opcode].addr_mode == IMP) {
+		cpu->a = rotator & 0x00FF;
+	} else {
+ 		cpu_write(cpu, cpu->addr_abs, rotator & 0x00FF);
+	}
 
 	return 0;
 }
@@ -1016,13 +1019,16 @@ unsigned char
 ROR(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	unsigned char rotator = cpu->fetched & 0x01;
-	cpu->fetched = (cpu->fetched >> 1) & 0x7F;
-	cpu->fetched = cpu->fetched | cpu_getFlag(cpu, C);
-
-	cpu_setFlag(cpu, C, rotator);
-	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
-	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+	unsigned short rotator = (unsigned short)(cpu_getFlag(cpu, C) << 7) | (cpu->fetched >> 1);
+	cpu_setFlag(cpu, C, cpu->fetched & 0x01);
+	cpu_setFlag(cpu, Z, (rotator & 0x00FF) == 0x00);
+	cpu_setFlag(cpu, N, rotator & 0x0080);
+	
+	if (lookup[cpu->opcode].addr_mode == IMP) {
+		cpu->a = rotator & 0x00FF;
+	} else {
+ 		cpu_write(cpu, cpu->addr_abs, rotator & 0x00FF);
+	}
 
 	return 0;
 }
