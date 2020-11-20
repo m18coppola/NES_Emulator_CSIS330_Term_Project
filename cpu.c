@@ -942,6 +942,33 @@ ORA(CPU* cpu) {
 	return 1;
 }
 
+/* Push Accumulator */
+/*
+ * The Accumulator register is pushed to the stack.
+ */
+unsigned char 
+PHA(CPU* cpu) {
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->a);
+	cpu->stkp--;
+
+	return 0;
+}
+
+/* Push Processor Status */
+/*
+ * The status flags are pushed to the stack and the flags are reset.
+ */
+unsigned char 
+PHP(CPU* cpu) {
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status | cpu_getFlag(cpu, B) | cpu_getFlag(cpu, U));
+	cpu->stkp--;
+
+	cpu_setFlag(cpu, B, false);
+	cpu_setFlag(cpu, U, false);
+
+	return 0;
+}
+
 /* Rotate Left */
 /*
  * Rotates the referenced byte left. This sets the carry bit to the last bit of the 
