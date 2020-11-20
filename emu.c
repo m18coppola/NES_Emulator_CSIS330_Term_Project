@@ -78,22 +78,31 @@ closeSDL()
  }
 
 int
-main()
+main(int argc, char* argv)
 {
 	/* Params for getopt */
 	int num_iters = -1;
 	int ch;
+	int option_index = 0;
 
 	/* Defines the options and their long/short equivalents. */
 	struct option longopts[] = {
 		// TODO - Add all options.
-	}
+	};
 
 	/* loop flag */
 	int quit = 0;
 
 	/* Event handler */
 	SDL_Event e;
+
+	/* Processes the command-line parameters */
+	while ((ch = getopt_long(argc, argv, "", longopts, &option_index)) != -1) {
+		switch (ch) {
+			default: 
+				break;
+		}
+	}
 	
 	startSDL();	
 
