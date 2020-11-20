@@ -326,15 +326,11 @@ IZY(CPU* cpu)
 /* 
  *
  * Operations
- * 
- * 1) fetch memory
- * 2) implement opcode
- * 3) set flags
- * 4) return the possibility of extra clock cycles
+ *
  *
  */
 
-/* Add Memory to A with Carry */
+/* Add with Carry In */
 /*
  * Adds the fetched memory to the Accumulator register and the carry bit.
  * This would include a check regarding alternate functionality using Binary Coded 
@@ -344,14 +340,14 @@ unsigned char
 ADC(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	unsigned char result = cpu->a + cpu->fetched + cpu_getFlag(cpu, C);
+	int result = cpu->a + cpu->fetched + cpu_getFlag(cpu, C);
 
-	cpu_setFlag(cpu, V, (cpu->a & 0x80) != (result & 0x80));
-	cpu_setFlag(cpu, N, cpu->a & 0x80);
-	cpu_setFlag(cpu, Z, result == 0X00);
+	cpu_setFlag(cpu, C, result > 255);
+	cpu_setFlag(cpu, V, (~(cpu->a ^ cpu->fetched) & (cpu->a ^ result) & 0x0080));
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0X00);
 
-	// TODO - Implement the proper functionality for ADC regarding overflow.
-	// Not finished.
+	cpu->a = result & 0x00FF;
 
 	return 1;
 }
@@ -400,11 +396,11 @@ unsigned char
 BCC(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, C) == 0) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -424,11 +420,11 @@ unsigned char
 BCS(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, C) == 1) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -448,11 +444,11 @@ unsigned char
 BEQ(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, Z) == 1) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -492,11 +488,11 @@ unsigned char
 BMI(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, N) == 1) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -516,11 +512,11 @@ unsigned char
 BNE(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, Z) == 0) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
@@ -540,15 +536,41 @@ unsigned char
 BPL(CPU* cpu) {
 
 	if (cpu_getFlag(cpu, N) == 0) {
-		cpu->cycles = cpu->cycles + 1;
+		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
-			cpu->cycles = cpu->cycles + 1;
+			cpu->cycles++;
 		}
 
 		cpu->pc = cpu->addr_abs;
 	}
+
+	return 0;
+}
+
+/* Force Interrupt */
+/*
+ * Breaks by forcing an interrupt request.
+ * It pushes the program counter to the stack and takes the IRQ interrupt
+ * vector from the end of memory. 
+ */
+unsigned char 
+BRK(CPU* cpu) {
+	cpu->pc++;
+
+	cpu_setFlag(cpu, I, 1);
+	cpu_write(cpu, 0x0100 + cpu->stkp, (cpu->pc >> 8) & 0x00FF);
+	cpu->pc--;
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->pc & 0x00FF);
+	cpu->pc--;
+
+	cpu_setFlag(cpu, B, 1);
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status);
+	cpu->pc--;
+	cpu_setFlag(cpu, B, 0);
+
+	cpu->pc = (cpu_read(cpu, 0xFFFE) | (cpu_read(cpu, 0xFFFF) << 8));
 
 	return 0;
 }
@@ -777,7 +799,7 @@ INC(CPU* cpu) {
  */
 unsigned char 
 INX(CPU* cpu) {
-	cpu->x = cpu->x + 1;
+	cpu->x++;
 
 	cpu_setFlag(cpu, N, cpu->x & 0x80);
 	cpu_setFlag(cpu, Z, cpu->x == 0x00);
@@ -791,7 +813,7 @@ INX(CPU* cpu) {
  */
 unsigned char 
 INY(CPU* cpu) {
-	cpu->y = cpu->y + 1;
+	cpu->y++;
 
 	cpu_setFlag(cpu, N, cpu->y & 0x80);
 	cpu_setFlag(cpu, Z, cpu->y == 0x00);
@@ -821,9 +843,9 @@ JSR(CPU* cpu) {
 	unsigned short progCounter = cpu->pc - 1;
 
 	cpu_write(cpu, 0x0100 + cpu->stkp, progCounter >> 8 & 0x00FF);
-	cpu->stkp = cpu->stkp - 1;
+	cpu->stkp--;
 	cpu_write(cpu, 0x0100 + cpu->stkp, progCounter & 0x00FF);
-	cpu->stkp = cpu->stkp - 1;
+	cpu->stkp--;
 
 	cpu->pc = cpu->addr_abs;
 
@@ -924,6 +946,33 @@ ORA(CPU* cpu) {
 	return 1;
 }
 
+/* Push Accumulator */
+/*
+ * The Accumulator register is pushed to the stack.
+ */
+unsigned char 
+PHA(CPU* cpu) {
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->a);
+	cpu->stkp--;
+
+	return 0;
+}
+
+/* Push Processor Status */
+/*
+ * The status flags are pushed to the stack and the flags are reset.
+ */
+unsigned char 
+PHP(CPU* cpu) {
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status | cpu_getFlag(cpu, B) | cpu_getFlag(cpu, U));
+	cpu->stkp--;
+
+	cpu_setFlag(cpu, B, false);
+	cpu_setFlag(cpu, U, false);
+
+	return 0;
+}
+
 /* Rotate Left */
 /*
  * Rotates the referenced byte left. This sets the carry bit to the last bit of the 
@@ -962,6 +1011,30 @@ ROR(CPU* cpu) {
 	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
 
 	return 0;
+}
+
+/* Subtract with Carry */
+/*
+ * Subtracts the memory and the carry bit from the Accumulator.
+ * This would include a check regarding alternate functionality using Binary Coded 
+ * Decimals, but decimal mode is not used in the NES so it is not included.
+ */
+unsigned char 
+SBC(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char negation = cpu->fetched ^ 0x00FF;
+
+	int result = cpu->a + negation + cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, C, result & 0xFF00);
+	cpu_setFlag(cpu, V, (result ^ cpu->a) & (result ^ negation) & 0x0080);
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0X00);
+
+	cpu->a = result & 0x00FF;
+
+	return 1;
 }
 
 /* Set Carry Flag */
