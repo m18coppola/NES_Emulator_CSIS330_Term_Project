@@ -382,6 +382,12 @@ ASL(CPU* cpu) {
 	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
 	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
 
+	if (lookup[cpu->opcode].addr_mode == IMP) {
+		cpu->a = cpu->fetched;
+	} else {
+		cpu_write(cpu, cpu->addr_abs, cpu->fetched);
+	}
+
 	return 0;
 }
 
@@ -561,16 +567,16 @@ BRK(CPU* cpu) {
 
 	cpu_setFlag(cpu, I, 1);
 	cpu_write(cpu, 0x0100 + cpu->stkp, (cpu->pc >> 8) & 0x00FF);
-	cpu->pc--;
+	cpu->stkp--;
 	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->pc & 0x00FF);
-	cpu->pc--;
+	cpu->stkp--;
 
 	cpu_setFlag(cpu, B, 1);
 	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status);
-	cpu->pc--;
+	cpu->stkp--;
 	cpu_setFlag(cpu, B, 0);
 
-	cpu->pc = (cpu_read(cpu, 0xFFFE) | (cpu_read(cpu, 0xFFFF) << 8));
+	cpu->pc = ((unsigned short)cpu_read(cpu, 0xFFFE) | ((unsigned short)cpu_read(cpu, 0xFFFF) << 8));
 
 	return 0;
 }
@@ -677,9 +683,9 @@ CMP(CPU* cpu) {
 
 	unsigned char result = cpu->a - cpu->fetched;
 
-	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, N, result & 0x0080);
 	cpu_setFlag(cpu, C, cpu->a >= cpu->fetched);
-	cpu_setFlag(cpu, Z, result == 0x00);
+	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0x0000);
 
 	return 1;
 }
@@ -694,9 +700,9 @@ CPX(CPU* cpu) {
 
 	unsigned char result = cpu->x - cpu->fetched;
 
-	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, N, result & 0x0080);
 	cpu_setFlag(cpu, C, cpu->x >= cpu->fetched);
-	cpu_setFlag(cpu, Z, result == 0x00);
+	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0x0000);
 
 	return 0;
 }
@@ -711,9 +717,9 @@ CPY(CPU* cpu) {
 
 	unsigned char result = cpu->y - cpu->fetched;
 
-	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, N, result & 0x0080);
 	cpu_setFlag(cpu, C, cpu->y >= cpu->fetched);
-	cpu_setFlag(cpu, Z, result == 0x00);
+	cpu_setFlag(cpu, Z, (result & 0x00FF)== 0x0000);
 
 	return 0;
 }
@@ -729,7 +735,7 @@ DEC(CPU* cpu) {
 	cpu->fetched = (cpu->fetched - 1) & 0xFF;
 
 	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
-	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+	cpu_setFlag(cpu, Z, (cpu->fetched & 0x00FF) == 0x00);
 
 	return 0;
 }
@@ -769,6 +775,8 @@ DEY(CPU* cpu) {
  */
 unsigned char
 EOR(CPU* cpu) {
+	cpu_fetch(cpu);
+
 	cpu->a = cpu->a ^ cpu->fetched;
 
 	cpu_setFlag(cpu, N, cpu->a & 0x80);
@@ -786,6 +794,8 @@ INC(CPU* cpu) {
 	cpu_fetch(cpu);
 
 	cpu->fetched = (cpu->fetched + 1) & 0xFF;
+
+	cpu_write(cpu, cpu->addr_abs, cpu->fetched);
 
 	cpu_setFlag(cpu, N, cpu->fetched & 0x80);
 	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
@@ -823,13 +833,11 @@ INY(CPU* cpu) {
 
 /* Jump to Address */
 /*
- * Sets the program counter to the fetched memory value.
+ * Sets the program counter to an absolute memory value.
  */
 unsigned char 
 JMP(CPU* cpu) {
-	cpu_fetch(cpu);
-
-	cpu->pc = cpu->fetched;
+	cpu->pc = cpu->addr_abs;
 
 	return 0;
 }
@@ -909,12 +917,18 @@ unsigned char
 LSR(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	cpu_setFlag(cpu, N, false);
 	cpu_setFlag(cpu, C, cpu->fetched & 0x01);
 
 	cpu->fetched = (cpu->fetched >> 1) & 0x7F;
 
-	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
+	cpu_setFlag(cpu, N, cpu->fetched & 0x0080);
+	cpu_setFlag(cpu, Z, (cpu->fetched & 0x00FF) == 0x00);
+
+	if (lookup[cpu->opcode].addr_mode == IMP) {
+		cpu->a = cpu->fetched & 0x00FF;
+	} else {
+		cpu_write(cpu, cpu->addr_abs, cpu->fetched & 0x00FF);
+	}
 
 	return 0;
 }
@@ -964,7 +978,7 @@ PHA(CPU* cpu) {
  */
 unsigned char 
 PHP(CPU* cpu) {
-	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status | cpu_getFlag(cpu, B) | cpu_getFlag(cpu, U));
+	cpu_write(cpu, 0x0100 + cpu->stkp, cpu->status | B | U);
 	cpu->stkp--;
 
 	cpu_setFlag(cpu, B, false);
@@ -1076,9 +1090,8 @@ SEI(CPU* cpu) {
  */
 unsigned char 
 STA(CPU* cpu) {
-	cpu->fetched = cpu->a;
-
-	return 1;
+	cpu_write(cpu, cpu->addr_abs, cpu->a);
+	return 0;
 }
 
 /* Store X in Memory */
@@ -1087,8 +1100,7 @@ STA(CPU* cpu) {
  */
 unsigned char 
 STX(CPU* cpu) {
-	cpu->fetched = cpu->x;
-
+	cpu_write(cpu, cpu->addr_abs, cpu->x);
 	return 1;
 }
 
@@ -1098,8 +1110,7 @@ STX(CPU* cpu) {
  */
 unsigned char 
 STY(CPU* cpu) {
-	cpu->fetched = cpu->y;
-
+	cpu_write(cpu, cpu->addr_abs, cpu->y);
 	return 1;
 }
 

@@ -57,6 +57,7 @@ void
 closeSDL()
 {
 	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(renderer);
 	window = NULL;
 
 	SDL_Quit();
