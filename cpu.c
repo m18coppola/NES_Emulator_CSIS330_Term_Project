@@ -3,7 +3,7 @@
 # define UNUSED(x) (void)(x)
 
 INSTRUCTION lookup[] = {
-	//#include "lookuptable.init"
+	#include "lookuptable.init"
 };
 
 /* Reads a byte from the input address. */
@@ -45,6 +45,31 @@ cpu_clock(CPU* cpu)
 	}
 
 	cpu->cycles--;
+}
+
+/* 
+ * Reset the state of the CPU
+ */
+void
+cpu_reset(CPU* cpu)
+{
+	cpu->addr_abs = 0xFFFC;
+	unsigned short lo = cpu_read(cpu, cpu->addr_abs + 0);
+	unsigned short hi = cpu_read(cpu, cpu->addr_abs + 1);
+
+	cpu->pc = (hi << 8) | lo;
+
+	cpu->a = 0;
+	cpu->x = 0;
+	cpu->y = 0;
+	cpu->stkp = 0xFD;
+	cpu->status = 0x00 | U;
+
+	cpu->addr_rel = 0x0000;
+	cpu->addr_abs = 0x0000;
+	cpu->fetched = 0x00;
+
+	cpu->cycles = 8;
 }
 
 /* Returns the value of the input flag in the status register. */
@@ -987,6 +1012,33 @@ PHP(CPU* cpu) {
 	return 0;
 }
 
+/* Pop the A Register off Stack */
+/* 
+ * the A register is loaded with the contents popped from the stack
+ */
+unsigned char
+PLA(CPU* cpu)
+{
+	cpu->stkp++;
+	cpu->a = cpu_read(cpu, 0x0100 + cpu->stkp);
+	cpu_setFlag(cpu, Z, cpu->a == 0x00);
+	cpu_setFlag(cpu, N, cpu->a & 0x80);
+	return 0;
+}
+
+/* Pop Processor Status */
+/* 
+ * loads status register with contents popped off of the stack
+ */
+unsigned char
+PLP(CPU* cpu)
+{
+	cpu->stkp++;
+	cpu->status = cpu_read(cpu, 0x0100 + cpu->stkp);
+	cpu_setFlag(cpu, U, true);
+	return 0;
+}
+
 /* Rotate Left */
 /*
  * Rotates the referenced byte left. This sets the carry bit to the last bit of the 
@@ -1030,6 +1082,34 @@ ROR(CPU* cpu) {
  		cpu_write(cpu, cpu->addr_abs, rotator & 0x00FF);
 	}
 
+	return 0;
+}
+
+/* Return from Interrupt */
+unsigned char
+RTI(CPU* cpu)
+{
+	cpu->stkp++;
+	cpu->status = cpu_read(cpu, 0x0100 + cpu->stkp);
+	cpu->status = cpu->status & ~B;
+	cpu->status = cpu->status & ~U;
+
+	cpu->stkp++;
+	cpu->pc = (unsigned short)cpu_read(cpu, 0x0100 + cpu->stkp);
+	cpu->stkp++;
+	cpu->pc = cpu->pc | (unsigned short)cpu_read(cpu, 0x0100 + cpu->stkp) << 8;
+	return 0;
+}
+
+/* Return from Subroutine */
+unsigned char
+RTS(CPU* cpu)
+{
+	cpu->stkp++;
+	cpu->pc = (unsigned short)cpu_read(cpu, 0x0100 + cpu->stkp);
+	cpu->stkp++;
+	cpu->pc = cpu->pc | (unsigned short)cpu_read(cpu, 0x0100 + cpu->stkp) << 8;
+	cpu->pc++;
 	return 0;
 }
 
