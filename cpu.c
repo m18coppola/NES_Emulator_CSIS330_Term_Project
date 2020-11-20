@@ -326,7 +326,7 @@ IZY(CPU* cpu)
  *
  */
 
-/* Add Memory to A with Carry */
+/* Add with Carry In */
 /*
  * Adds the fetched memory to the Accumulator register and the carry bit.
  * This would include a check regarding alternate functionality using Binary Coded 
@@ -980,6 +980,30 @@ ROR(CPU* cpu) {
 	cpu_setFlag(cpu, Z, cpu->fetched == 0x00);
 
 	return 0;
+}
+
+/* Subtract with Carry */
+/*
+ * Subtracts the memory and the carry bit from the Accumulator.
+ * This would include a check regarding alternate functionality using Binary Coded 
+ * Decimals, but decimal mode is not used in the NES so it is not included.
+ */
+unsigned char 
+SBC(CPU* cpu) {
+	cpu_fetch(cpu);
+
+	unsigned char negation = cpu->fetched ^ 0x00FF;
+
+	int result = cpu->a + negation + cpu_getFlag(cpu, C);
+
+	cpu_setFlag(cpu, C, result & 0xFF00);
+	cpu_setFlag(cpu, V, (result ^ cpu->a) & (result ^ negation) & 0x0080);
+	cpu_setFlag(cpu, N, result & 0x80);
+	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0X00);
+
+	cpu->a = result & 0x00FF;
+
+	return 1;
 }
 
 /* Set Carry Flag */
