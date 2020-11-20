@@ -2,6 +2,10 @@
 
 # define UNUSED(x) (void)(x)
 
+INSTRUCTION lookup[] = {
+	//#include "lookuptable.init"
+};
+
 /* Reads a byte from the input address. */
 unsigned char
 cpu_read(CPU* cpu, unsigned short addr) 

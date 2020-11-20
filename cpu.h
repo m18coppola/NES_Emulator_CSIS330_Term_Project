@@ -94,7 +94,3 @@ unsigned char TSX(CPU* cpu);	unsigned char TXA(CPU* cpu);	unsigned char TXS(CPU*
  */
 unsigned char XXX(CPU* cpu);
 
-INSTRUCTION lookup[] =
-{
-	//include "lookuptable.init"	
-};

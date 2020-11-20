@@ -1,7 +1,7 @@
 # -*-Makefile-*-
 
 CC=gcc
-FLAGS=-W -Wall -g
+FLAGS=-W -Wall -g `sdl2-config --libs --cflags`
 
 all: emu
 
@@ -19,10 +19,3 @@ cpu.o: cpu.c
 
 clean:
 	rm -f *.o emu
-
-paper: paper.dvi
-	dvipdfm paper.dvi
-	xdg-open paper.pdf
-
-paper.dvi: paper.tex
-	latex paper.tex
