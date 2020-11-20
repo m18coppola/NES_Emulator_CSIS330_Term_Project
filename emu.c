@@ -70,7 +70,7 @@ closeSDL()
  */
  void
  usage (char* program) {
-	 printf("Usage: %s [--viewportA] [--viewportB] [--file filename]\n", program);
+	 printf("Usage: %s [--file filename] [--viewportA] [--viewportB] \n", program);
  }
 
 int
@@ -101,15 +101,15 @@ main(int argc, char* argv[])
 	SDL_Event e;
 
 	/* Processes the command-line parameters */
-	while ((ch = getopt_long(argc, argv, "a:b:f", longopts, &option_index)) != -1) {
+	while ((ch = getopt_long(argc, argv, "f:a:b:", longopts, &option_index)) != -1) {
 		switch (ch) {
 
 			case 'a':
-				strcpy(viewportA, optarg);
+				viewportA = optarg;
 				break;
 
 			case 'b':
-				strcpy(viewportB, optarg);
+				viewportB = optarg;
 				break;
 
 			case 'f':
