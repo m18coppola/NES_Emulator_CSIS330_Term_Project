@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <SDL.h>
+#include <getopt.h>
 
 #include "cpu.h"
 
 int startSDL();
 void closeSDL();
+
+/* Macros for parsing */
+// TODO - Add them if needed.
 
 /* macros */
 #define TITLE "6502 Emulator"
@@ -63,9 +67,28 @@ closeSDL()
 	SDL_Quit();
 }
 
+/*
+ * Usage Function
+ * Called when something isn't right with the command line parameters.
+ */
+ void
+ usage (char* program) {
+	 printf("Usage: \n");
+
+ }
+
 int
 main()
 {
+	/* Params for getopt */
+	int num_iters = -1;
+	int ch;
+
+	/* Defines the options and their long/short equivalents. */
+	struct option longopts[] = {
+		// TODO - Add all options.
+	}
+
 	/* loop flag */
 	int quit = 0;
 
