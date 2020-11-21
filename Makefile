@@ -1,7 +1,7 @@
 # -*-Makefile-*-
 
 CC=gcc
-FLAGS=-W -Wall -g `sdl2-config --libs --cflags`
+FLAGS=-W -Wall -g `sdl2-config --libs --cflags` -lSDL2_ttf
 
 all: emu
 
