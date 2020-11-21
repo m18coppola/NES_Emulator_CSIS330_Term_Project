@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=latex 2020.11.17)  18 NOV 2020 16:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.11.17)  20 NOV 2020 23:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**paper
+**paper.tex
 (./paper.tex
 LaTeX2e <2020-02-02> patch level 5
 L3 programming layer <2020-06-03>
@@ -45,10 +45,10 @@ Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 (/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: dvips.def on input line 105.
+Package graphics Info: Driver file: pdftex.def on input line 105.
 
-(/usr/share/texmf-dist/tex/latex/graphics-def/dvips.def
-File: dvips.def 2017/06/20 v3.1d Graphics/color driver for dvips
+(/usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen135
 \Gin@req@width=\dimen136
@@ -115,15 +115,10 @@ Package caption Info: listings package is loaded.
 \c@subfigure=\count185
 \c@subtable=\count186
 )
-(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def
-File: l3backend-dvips.def 2020-06-03 L3 backend support: dvips
+(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
+File: l3backend-pdfmode.def 2020-06-03 L3 backend support: PDF mode
+\l__kernel_color_stack_int=\count187
 \l__pdf_internal_box=\box47
-\g__pdf_backend_object_int=\count187
-\l__pdf_backend_content_box=\box48
-\l__pdf_backend_model_box=\box49
-\g__pdf_backend_annotation_int=\count188
-\g__pdf_backend_link_int=\count189
-\g__pdf_backend_link_sf_int=\count190
 ) (./paper.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
 LaTeX Font Info:    ... okay on input line 34.
@@ -141,11 +136,32 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
 LaTeX Font Info:    ... okay on input line 34.
 LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 3
 4.
-
 (/usr/share/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
-\c@lstlisting=\count191
+(/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count188
+\scratchdimen=\dimen150
+\scratchbox=\box48
+\nofMPsegments=\count189
+\nofMParguments=\count190
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count191
+\MPscratchDim=\dimen151
+\MPnumerator=\count192
+\makeMPintoPDFobject=\count193
+\everyMPtoPDFconversion=\toks18
+) (/usr/share/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+\c@lstlisting=\count194
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -172,12 +188,21 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 51.
  [1
 
-]
-File: figure1.PNG Graphic file (type eps)
- <figure1.PNG>
-File: figure2.PNG Graphic file (type eps)
-
-<figure2.PNG>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Package pdftex.def Info: Option `bb' equivalent to `viewport' with pdftex drive
+r on input line 96.
+<figure1.PNG, id=8, 231.86626pt x 131.49126pt>
+File: figure1.PNG Graphic file (type png)
+<use figure1.PNG>
+Package pdftex.def Info: figure1.PNG  used on input line 96.
+(pdftex.def)             Requested size: 234.87749pt x 133.2007pt.
+Package pdftex.def Info: Option `bb' equivalent to `viewport' with pdftex drive
+r on input line 101.
+<figure2.PNG, id=10, 278.03876pt x 160.6pt>
+File: figure2.PNG Graphic file (type png)
+<use figure2.PNG>
+Package pdftex.def Info: figure2.PNG  used on input line 101.
+(pdftex.def)             Requested size: 234.87749pt x 135.67288pt.
 LaTeX Font Info:    Trying to load font information for OML+ptm on input line 1
 13.
  (/usr/share/texmf-dist/tex/latex/psnfss/omlptm.fd
@@ -185,26 +210,35 @@ File: omlptm.fd
 )
 LaTeX Font Info:    Font shape `OML/ptm/m/n' in size <12> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 113.
- [2]
-(./paper.bbl
+
+[2 <./figure1.PNG> <./figure2.PNG>] (./paper.bbl
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 5
 .
- (/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+
+(/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 5.
-) [3]
-(./paper.aux) ) 
+) [3] (./paper.aux) ) 
 Here is how much of TeX's memory you used:
- 3878 strings out of 480479
- 58769 string characters out of 5905984
- 293633 words of memory out of 5000000
- 19893 multiletter control sequences out of 15000+600000
- 543180 words of font info for 59 fonts, out of 8000000 for 9000
+ 4295 strings out of 480478
+ 64394 string characters out of 5905958
+ 296584 words of memory out of 5000000
+ 20287 multiletter control sequences out of 15000+600000
+ 552161 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 45i,6n,47p,252b,1227s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 45i,7n,47p,256b,1227s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/s
+hare/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dis
+t/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/tim
+es/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
+Output written on paper.pdf (3 pages, 72527 bytes).
+PDF statistics:
+ 36 PDF objects out of 1000 (max. 8388607)
+ 22 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-Output written on paper.dvi (3 pages, 5452 bytes).

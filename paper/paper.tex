@@ -92,12 +92,12 @@ bitwise operations.
 % load figures
 \begin{figure}[b!]
 	\centering
-	\begin{subfigure}[b]{0.5\linewidth}
+	\begin{subfigure}[b]{0.5\textwidth}
 		\includegraphics[width=\linewidth,bb=0 0 462 262]{figure1.PNG}
 		\caption{A single binary value representing multiple values.}
 		\label{fig:figure1}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.5\linewidth}
+	\begin{subfigure}[b]{0.5\textwidth}
 		\includegraphics[width=\linewidth,bb=0 0 554 320]{figure2.PNG}
 		\caption{Using a bitmask to extract values from a binary number.}
 		\label{fig:figure2}
@@ -105,8 +105,8 @@ bitwise operations.
 \end{figure}
 
 
-To extract information from a binary number, we would first need to isolate that information. We can
-achieve this by using a bitmask. We can create a bitmask by creating a new 8-bit number that has
+To extract information from a binary number, we would first need to isolate that information using a bitmask.
+We can create a bitmask by creating a new 8-bit number that has
 1's placed over the important digits, and 0's on digits that are not. With this mask, we can use a
 bitwise AND operation ( \lstinline{&} ) and have a result that only includes the digits defined by the bitmask shown in figure~\ref{fig:figure2}~\cite{bitmasks}.
 
