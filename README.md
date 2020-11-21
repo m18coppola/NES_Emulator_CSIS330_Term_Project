@@ -3,6 +3,7 @@ A 6502 emulator designed to be extended into a fully functional NES emulator.
 
 # To Build
 run `make` to build
+
 `./emu` to execute
 
 # Changing ASM Source
