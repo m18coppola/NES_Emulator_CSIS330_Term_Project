@@ -7,48 +7,50 @@ Warning--I didn't find a database entry for "status_flags"
 Warning--to sort, need author or key in nesdev_CPU
 Warning--to sort, need author or key in wikipediaNES
 Warning--to sort, need author or key in mem_mapping
+Warning--to sort, need author or key in PPU
+Warning--to sort, need author or key in mappers
 Warning--to sort, need author or key in cpu_registers
 Warning--to sort, need author or key in addressing_modes
 Warning--to sort, need author or key in illegal_ops
-You've used 8 entries,
+You've used 10 entries,
             2118 wiz_defined-function locations,
-            535 strings with 4538 characters,
-and the built_in function-call counts, 1430 in all, are:
-= -- 149
-> -- 14
+            541 strings with 4650 characters,
+and the built_in function-call counts, 1776 in all, are:
+= -- 185
+> -- 16
 < -- 0
-+ -- 10
++ -- 12
 - -- 2
-* -- 52
-:= -- 190
-add.period$ -- 25
-call.type$ -- 8
-change.case$ -- 25
+* -- 64
+:= -- 232
+add.period$ -- 31
+call.type$ -- 10
+change.case$ -- 31
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 57
-empty$ -- 178
+cite$ -- 18
+duplicate$ -- 71
+empty$ -- 224
 format.name$ -- 2
-if$ -- 344
+if$ -- 430
 int.to.chr$ -- 0
-int.to.str$ -- 8
+int.to.str$ -- 10
 missing$ -- 0
-newline$ -- 44
+newline$ -- 54
 num.names$ -- 2
-pop$ -- 57
+pop$ -- 73
 preamble$ -- 1
-purify$ -- 18
+purify$ -- 22
 quote$ -- 0
-skip$ -- 47
+skip$ -- 58
 stack$ -- 0
-substring$ -- 41
-swap$ -- 8
+substring$ -- 51
+swap$ -- 10
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 32
-warning$ -- 6
+type$ -- 40
+warning$ -- 8
 while$ -- 2
-width$ -- 9
-write$ -- 85
-(There were 7 warnings)
+width$ -- 12
+write$ -- 105
+(There were 9 warnings)

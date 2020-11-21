@@ -77,7 +77,6 @@ Official operations of the 6502 only need to be calculated, and not emulated. We
 the output of the operations immediately, and then waiting the number of clock cycles that operation
 took to execute.
 
-Overview to be continued...
 
 \section{Bitwise Operations}
 \label{sec:bitwise}
@@ -145,14 +144,14 @@ index. The Object Attribute Memory is dynamic memory that changes according to w
 the data for the objects being displayed, including the color and position of the sprites~\cite{PPU}.
 
 The PPU was still limited in its ability to fit more demanding visuals, but this could be expanded by 
-mappers. There are hundreds of different mappers since these were made by the developer, this also means that
-there was not a limit to the number of mappers in existence. The emulation requires these mappers to function
-properly, so these would have to be implemented as a game was desired to be emulated. We would have to add them
-on a case by case basis. That does not mean that mappers were not reused, rather that the list was constantly
-added to, so certain mappers may extend emulation capabilities more than others. These mappers were stored in the
-NES game cartridge and function like a page table in memory. This allowed for more functionality in a game, 
-while using less space in memory. The mapper would add to the PPU's memory depending on what needed to be 
-referenced at a given time~\cite{mappers}. 
+mappers. There are hundreds of different mappers since these were made by developers and included on the game 
+cartridge, this also means that there was not a limit to the number of mappers in existence. The emulation 
+requires these mappers to function properly, so these would have to be implemented as a game was desired to 
+be emulated. We would have to add them on a case by case basis. That does not mean that mappers were not 
+reused, rather that the list was constantly added to, so certain mappers may extend emulation capabilities 
+more than others. These mappers were stored in the NES game cartridge and function like a page table in 
+memory. This allowed for more functionality in a game, while using less space in memory. The mapper would 
+add to the PPU's memory depending on what needed to be referenced at a given time~\cite{mappers}. 
 
 The 6502 features 6 registers. The first major register is the 1-byte wide Accumulator (A) register.
 This register is used with the ALU, and supports using the status register to describe its behavior,

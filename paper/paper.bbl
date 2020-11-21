@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{cpu_registers}
 Cpu registers.
@@ -8,6 +8,11 @@ Cpu registers.
 \bibitem{addressing_modes}
 Cpu addressing modes.
 \newblock \url{http://wiki.nesdev.com/w/index.php/CPU_addressing_modes}, 2018.
+\newblock Accessed: 2020-11-20.
+
+\bibitem{PPU}
+Ppu.
+\newblock \url{https://wiki.nesdev.com/w/index.php/PPU}, 2018.
 \newblock Accessed: 2020-11-20.
 
 \bibitem{nesdev_CPU}
@@ -24,6 +29,11 @@ Cpu memory map.
 Cpu unofficial opcodes.
 \newblock \url{https://wiki.nesdev.com/w/index.php/CPU_unofficial_opcodes},
   2020.
+\newblock Accessed: 2020-11-20.
+
+\bibitem{mappers}
+Mapper.
+\newblock \url{https://wiki.nesdev.com/w/index.php/Mapper}, 2020.
 \newblock Accessed: 2020-11-20.
 
 \bibitem{wikipediaNES}
