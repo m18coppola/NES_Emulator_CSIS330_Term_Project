@@ -70,7 +70,7 @@ closeSDL()
  */
  void
  usage (char* program) {
-	 printf("Usage: %s [--file filename] [--viewportA] [--viewportB] \n", program);
+	 printf("Usage: %s \n[--file filename] [--viewport1] [--viewport2] \n[--initA] [--initX] [--initY]\n", program);
  }
 
 int
@@ -80,8 +80,13 @@ main(int argc, char* argv[])
 	char file[FILENAME_MAX] = "default.txt";
 
 	/* Viewports */
-	char* viewportA = "0x0000";
-	char* viewportB = "0x0100";
+	char* viewport1 = "0x0000";
+	char* viewport2 = "0x0100";
+
+	/* Initial Register Values */
+	char* initA = "0x00";
+	char* initX = "0x00";
+	char* initY = "0x00";
 
 	/* Params for getopt */
 	int ch;
@@ -90,8 +95,8 @@ main(int argc, char* argv[])
 	/* Defines the options and their long/short equivalents. */
 	struct option longopts[] = {
 		{ "file", required_argument, NULL, 'f'},
-		{ "viewport-a", no_argument, NULL, 'a' },
-		{ "viewport-b", no_argument, NULL, 'b' }
+		{ "viewport-1", required_argument, NULL, '1' },
+		{ "viewport-2", required_argument, NULL, '2' }
 	};
 
 	/* loop flag */
@@ -101,20 +106,37 @@ main(int argc, char* argv[])
 	SDL_Event e;
 
 	/* Processes the command-line parameters */
-	while ((ch = getopt_long(argc, argv, "f:a:b:", longopts, &option_index)) != -1) {
+	while ((ch = getopt_long(argc, argv, "f:1:2:a:x:y:h", longopts, &option_index)) != -1) {
 		switch (ch) {
 
-			case 'a':
-				viewportA = optarg;
+			case '1':
+				viewport1 = optarg;
 				break;
 
-			case 'b':
-				viewportB = optarg;
+			case '2':
+				viewport2 = optarg;
 				break;
 
 			case 'f':
 				strcpy(file, optarg);
 				break;
+
+			case 'a':
+				initA = optarg;
+				break;
+
+			case 'x':
+				initX = optarg;
+				break;
+
+			case 'y':
+				initY = optarg;
+				break;
+
+			case 'h':
+				printf("Enter a filename with -f. Change viewport areas with -1 and -2. \nEnter initial register values with -a, -x, and -y.\n\n");
+      			usage(argv[0]);
+      			return 0;
 
 			default: 
 				usage(argv[0]);
@@ -129,7 +151,7 @@ main(int argc, char* argv[])
     	return 1;
 	}
 
-	printf("Variables: %s \n %s \n %s \n", file, viewportA, viewportB);
+	printf("Variables: %s \n %s \n %s \n %s \n %s \n %s \n", file, viewport1, viewport2, initA, initX, initY);
 	
 	startSDL();	
 
