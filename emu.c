@@ -108,24 +108,25 @@ startEmu()
 	cpu->bus = &nes;
 
 	
-	// Load Program (assembled at https://www.masswerk.at/6502/assembler.html)
+	/* assembled at https://www.masswerk.at/6502/assembler.html) */
 	/*
-		*=$8000
-		LDX #10
-		STX $0000
-		LDX #3
-		STX $0001
-		LDY $0000
-		LDA #0
-		CLC
-		loop
-		ADC $0001
-		DEY
-		BNE loop
-		STA $0002
-		NOP
-		NOP
-		NOP
+ 		; FIBONACCI SEQUENCE GENERATOR
+ 		LDA  #0
+      		STA  $F0     ; LOWER NUMBER
+       		LDA  #1
+       		STA  $F1     ; HIGHER NUMBER
+       		LDX  #0
+	 LOOP:  LDA  $F1
+       		STA  $0F1B,X
+       		STA  $F2     ; OLD HIGHER NUMBER
+       		ADC  $F0
+       		STA  $F1     ; NEW HIGHER NUMBER
+       		LDA  $F2
+       		STA  $F0     ; NEW LOWER NUMBER
+       		INX
+       		CPX  #$0A    ; STOP AT FIB(10)
+       		BMI  LOOP
+       		RTS          ; RETURN FROM SUBROUTINE
 	*/
 	char* ss = strdup("A9 00 8D F0 00 A9 01 8D F1 00 A2 00 AD F1 00 9D 1B 0F 8D F2 00 6D F0 00 8D F1 00 AD F2 00 8D F0 00 E8 E0 0A 30 E6 60");
 	unsigned short nOffset = 0x8000;
