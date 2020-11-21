@@ -241,11 +241,11 @@ main(int argc, char* argv[])
 	struct option longopts[] = {
 		{ "file", required_argument, NULL, 'f'},
 		{ "viewport-1", required_argument, NULL, '1' },
-		{ "viewport-2", required_argument, NULL, '2' }
+		{ "viewport-2", required_argument, NULL, '2' },
 		{ "initA", required_argument, NULL, 'a'},
 		{ "initX", required_argument, NULL, 'x' },
-		{ "initY", required_argument, NULL, 'y' }
-		{ "help", no-argument, NULL, 'h'}
+		{ "initY", required_argument, NULL, 'y' },
+		{ "help", no_argument, NULL, 'h'}
 	};
 
 	/* loop flag */
@@ -294,11 +294,11 @@ main(int argc, char* argv[])
 	}
 
 	/* Makes sure the arguments were received. */
-	if (strcmp(file, "default.txt") == 0) {
-		fprintf(stderr, "Required file-name not specified.\n");
-    	usage(argv[0]);
-    	return 1;
-	}
+	//if (strcmp(file, "default.txt") == 0) {
+	//	fprintf(stderr, "Required file-name not specified.\n");
+    	//usage(argv[0]);
+    	//return 1;
+	//}
 
 	printf("Variables: %s \n %s \n %s \n %s \n %s \n %s \n", file, viewport1, viewport2, initA, initX, initY);
 	
