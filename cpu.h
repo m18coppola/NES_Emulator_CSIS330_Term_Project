@@ -94,3 +94,7 @@ unsigned char TSX(CPU* cpu);	unsigned char TXA(CPU* cpu);	unsigned char TXS(CPU*
  */
 unsigned char XXX(CPU* cpu);
 
+/*
+ * retuns the name of the current opcode
+ */
+char* cpu_getOpcode(CPU* cpu);

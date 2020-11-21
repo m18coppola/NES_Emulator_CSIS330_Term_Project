@@ -127,7 +127,7 @@ startEmu()
 		NOP
 		NOP
 	*/
-	char* ss = strdup("48 28 08 68 8D 87 13 48 28 08 68 8D 86 13 60");
+	char* ss = strdup("A9 00 8D F0 00 A9 01 8D F1 00 A2 00 AD F1 00 9D 1B 0F 8D F2 00 6D F0 00 8D F1 00 AD F2 00 8D F0 00 E8 E0 0A 30 E6 60");
 	unsigned short nOffset = 0x8000;
 	char* hex_str;
 	unsigned char value;
@@ -174,21 +174,30 @@ drawCPU()
 	int y = 0;
 	drawString(x, y, "STATUS:");
 	drawString(x + 100, y, (cpu->status&N)? "N":"-");
-	drawString(x + 140, y, (cpu->status&N)? "V":"-");
-	drawString(x + 180, y, (cpu->status&N)? "-":"-");
-	drawString(x + 220, y, (cpu->status&N)? "B":"-");
-	drawString(x + 260, y, (cpu->status&N)? "D":"-");
-	drawString(x + 300, y, (cpu->status&N)? "I":"-");
-	drawString(x + 340, y, (cpu->status&N)? "Z":"-");
-	drawString(x + 380, y, (cpu->status&N)? "C":"-");
+	drawString(x + 140, y, (cpu->status&V)? "V":"-");
+	drawString(x + 180, y, (cpu->status&U)? "-":"-");
+	drawString(x + 220, y, (cpu->status&B)? "B":"-");
+	drawString(x + 260, y, (cpu->status&D)? "D":"-");
+	drawString(x + 300, y, (cpu->status&I)? "I":"-");
+	drawString(x + 340, y, (cpu->status&Z)? "Z":"-");
+	drawString(x + 380, y, (cpu->status&C)? "C":"-");
 	sprintf(buff, "PC: $%04X", cpu->pc);
 	drawString(x, y + 20, buff);
+	sprintf(buff, "A: $%04X", cpu->a);
+	drawString(x, y + 40, buff);
+	sprintf(buff, "X: $%04X", cpu->x);
+	drawString(x, y + 60, buff);
+	sprintf(buff, "Y: $%04X", cpu->y);
+	drawString(x, y + 80, buff);
+	sprintf(buff, "STACK: $%04X", cpu->stkp);
+	drawString(x, y + 100, buff);
+	sprintf(buff, "OPCODE: %s", cpu_getOpcode(cpu));
+	drawString(x, y + 120, buff);
 }
 
 void
 drawString (int x, int y, char* chars)
-{
-	string = TTF_RenderText_Solid(font, chars, fontColor);
+{ string = TTF_RenderText_Solid(font, chars, fontColor);
 	stringTexture = SDL_CreateTextureFromSurface(renderer, string);
 
 	int w, h;
@@ -325,6 +334,16 @@ main(int argc, char* argv[])
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
 				quit = 1;
+			}
+			
+			if (e.type == SDL_KEYDOWN) {
+				switch (e.key.keysym.sym) {
+					case SDLK_SPACE:
+						do {
+							cpu_clock(cpu);
+						} while (cpu->cycles != 0);
+					break;
+				}
 			}
 		}
 

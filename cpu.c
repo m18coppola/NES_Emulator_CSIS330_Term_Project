@@ -75,14 +75,7 @@ cpu_reset(CPU* cpu)
 /* Returns the value of the input flag in the status register. */
 unsigned char 
 cpu_getFlag(CPU* cpu, STATUS_FLAG f) {
-	unsigned char flagCheck = cpu->status & f;
-	
-	/* Returns 1 if the bit that was checked is toggled on. 
-	 * There are 8 different statuses so flagCheck can be greater than 1. */
-	if (flagCheck > 0)
-		return 1;
-	
-	return 0;
+	return ((cpu->status & f) > 0) ? 1 : 0;
 }
 
 /*
@@ -91,13 +84,10 @@ cpu_getFlag(CPU* cpu, STATUS_FLAG f) {
  */
 void
 cpu_setFlag(CPU* cpu, STATUS_FLAG f, bool set) {
-	unsigned char status;
-
-	status = cpu->status;
 	if (set) {
-		status = status | f;  
+		cpu->status = cpu->status | f;  
 	} else {
-		status = status & ~f; 
+		cpu->status = cpu->status & ~f; 
 	}
 }
 
@@ -194,7 +184,7 @@ REL(CPU* cpu)
  	   you cannot branch to any address with the 6502 */
 
 	if (cpu->addr_rel & 0x80) { 
-		cpu->addr_rel = cpu->addr_rel | 0x00FF;
+		cpu->addr_rel = cpu->addr_rel | 0xFF00;
 	}
 
 	return 0;
@@ -368,7 +358,7 @@ ADC(CPU* cpu) {
 	int result = cpu->a + cpu->fetched + cpu_getFlag(cpu, C);
 
 	cpu_setFlag(cpu, C, result > 255);
-	cpu_setFlag(cpu, V, (~(cpu->a ^ cpu->fetched) & (cpu->a ^ result) & 0x0080));
+	cpu_setFlag(cpu, V, (~((unsigned short)cpu->a ^ (unsigned short)cpu->fetched) & ((unsigned short)cpu->a ^ (unsigned short)result) & 0x0080));
 	cpu_setFlag(cpu, N, result & 0x80);
 	cpu_setFlag(cpu, Z, (result & 0x00FF) == 0X00);
 
@@ -521,6 +511,7 @@ BMI(CPU* cpu) {
 	if (cpu_getFlag(cpu, N) == 1) {
 		cpu->cycles++;
 		cpu->addr_abs = cpu->pc + cpu->addr_rel;
+		
 
 		if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00)) {
 			cpu->cycles++;
@@ -723,7 +714,7 @@ unsigned char
 CPX(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	unsigned char result = cpu->x - cpu->fetched;
+	unsigned short result = (unsigned short)cpu->x - (unsigned short)cpu->fetched;
 
 	cpu_setFlag(cpu, N, result & 0x0080);
 	cpu_setFlag(cpu, C, cpu->x >= cpu->fetched);
@@ -1292,3 +1283,9 @@ TYA(CPU* cpu) {
 	UNUSED(cpu);
 	return 0;
  }
+
+char*
+cpu_getOpcode(CPU* cpu)
+{
+	return lookup[cpu->opcode].name;
+}
