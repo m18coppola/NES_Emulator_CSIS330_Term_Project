@@ -241,6 +241,10 @@ main(int argc, char* argv[])
 		{ "file", required_argument, NULL, 'f'},
 		{ "viewport-1", required_argument, NULL, '1' },
 		{ "viewport-2", required_argument, NULL, '2' }
+		{ "initA", required_argument, NULL, 'a'},
+		{ "initX", required_argument, NULL, 'x' },
+		{ "initY", required_argument, NULL, 'y' }
+		{ "help", no-argument, NULL, 'h'}
 	};
 
 	/* loop flag */
