@@ -172,6 +172,43 @@ will simulate the microcode, therefore the legal opcodes utilizing the microcode
 them on the rare chance a developer uses one. Although a small subset of NES titles utilize these unofficial
 opcodes, we will not implement them in the interest of time at the cost of 8 titles~\cite{illegal_ops}.
 
+\section{Implementation}
+\label{sec:implementation}
+
+Our implementation begins with the bus. We decided to use a struct that can hold a bitfield
+of several device memories that the CPU can access. Although our bus is capable of this, we opted
+in for the bus to use memory in its entire address range as we will not be using any other devices.
+The bus has only three simple functions for reading, writing and resetting the values in memory.
+Our bus also can limit the range in which it can read and write data depending on what devices
+are connected to it. With this limiter in code, we can change the behavior of the read/write depending on
+the requested address range from the CPU.
+
+To begin the CPU, we created an enumeration for all of the status flags of the CPU's status register.
+Each flag in the enumeration holds the number 1 bitshifted to the location of the flag in the status register.
+this allows us an easy way to refer to bitmasks as we set, unset, flip and test for status flags in the cpu.
+
+We then created a structure to hold all of the CPU's information. The first component of the CPU is the 
+registers. We used unsigned chars for each register, except for the program counter, which needs an unsigned short.
+We added a get flag, and a set flag function to be able to easily test and write to the status register
+in this CPU structure. In our structure, we include 5 helper values. We keep variables to store the current
+observed address, the relative address used by branching instructions, the current opcode, how many
+cycles are left needed to complete the current instruction and the fetched value from the addressing mode.
+
+We also flesh out in put header file functions for our 12 addressing modes and 56 operations. We add
+an extra opcode named XXX that captures all illegal opcodes. This serves as a no operation (NOP). We then
+added a clock cycle function that performs 1 clock cycle in the CPU.
+
+We created a structure the represents an instruction. This contains the name, the opcode, the addressing mode
+and the number of cycles each type of instruction takes. With this structure, we can make a lookup table that
+associates an opcode, structure and number of cycles each possible instruction takes based off the Rockwell instruction table
+for the 6502~\cite{6502}.
+
+Our addressing modes return the number of extra clock cycles the instruction takes, and the opcodes return
+whether the operation takes an extra clock cycle. Using this information, the clock function can use the
+lookup table to take an instruction, lookup the opcode in the lookup table, dereference and call the functions
+found in the instruction structure it has found, and use those function return values to find out how many clock
+cycles the operation took to execute.
+
 \singlespace
 
 \bibliographystyle{abbrv}
