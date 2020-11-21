@@ -92,13 +92,13 @@ bitwise operations.
 % load figures
 \begin{figure}[b!]
 	\centering
-	\begin{subfigure}[b]{0.5\textwidth}
-		\includegraphics[width=\linewidth,bb=0 0 462 262]{figure1.PNG}
+	\begin{subfigure}[t]{0.5\linewidth}
+		\includegraphics[bb=0 0 462 262]{figure1.PNG}
 		\caption{A single binary value representing multiple values.}
 		\label{fig:figure1}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.5\textwidth}
-		\includegraphics[width=\linewidth,bb=0 0 554 320]{figure2.PNG}
+	\begin{subfigure}[t]{0.4\linewidth}
+		\includegraphics[bb=0 0 554 320]{figure2.PNG}
 		\caption{Using a bitmask to extract values from a binary number.}
 		\label{fig:figure2}
 	\end{subfigure}
@@ -118,6 +118,11 @@ value~\cite{bitmasks}.
 A similar process is used for setting bits as well. We create a bitmask for the bits we want to set
 and or it with our value. To unset, we can \lstinline{&} with the inverse ( \lstinline{~} ) of our mask.
 We can toggle/flip bits with a mask that is XOR'd ( \lstinline{^} ) with our value.
+
+\section{NES Hardware}
+\label{sec:neshardware}
+
+
 
 \singlespace
 

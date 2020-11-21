@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.11.17)  20 NOV 2020 23:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.11.17)  20 NOV 2020 23:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -195,23 +195,34 @@ r on input line 96.
 File: figure1.PNG Graphic file (type png)
 <use figure1.PNG>
 Package pdftex.def Info: figure1.PNG  used on input line 96.
-(pdftex.def)             Requested size: 234.87749pt x 133.2007pt.
+(pdftex.def)             Requested size: 463.7325pt x 262.9825pt.
+
+Overfull \hbox (228.85501pt too wide) in paragraph at lines 96--97
+[][] 
+ []
+
 Package pdftex.def Info: Option `bb' equivalent to `viewport' with pdftex drive
 r on input line 101.
 <figure2.PNG, id=10, 278.03876pt x 160.6pt>
 File: figure2.PNG Graphic file (type png)
 <use figure2.PNG>
 Package pdftex.def Info: figure2.PNG  used on input line 101.
-(pdftex.def)             Requested size: 234.87749pt x 135.67288pt.
+(pdftex.def)             Requested size: 556.0775pt x 321.2pt.
+
+Overfull \hbox (368.17838pt too wide) in paragraph at lines 101--102
+[][] 
+ []
+
+[2 <./figure1.PNG> <./figure2.PNG>]
 LaTeX Font Info:    Trying to load font information for OML+ptm on input line 1
 13.
- (/usr/share/texmf-dist/tex/latex/psnfss/omlptm.fd
+
+(/usr/share/texmf-dist/tex/latex/psnfss/omlptm.fd
 File: omlptm.fd 
 )
 LaTeX Font Info:    Font shape `OML/ptm/m/n' in size <12> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 113.
-
-[2 <./figure1.PNG> <./figure2.PNG>] (./paper.bbl
+ (./paper.bbl
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 5
 .
 
@@ -235,7 +246,7 @@ Here is how much of TeX's memory you used:
 hare/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dis
 t/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/tim
 es/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on paper.pdf (3 pages, 72527 bytes).
+Output written on paper.pdf (3 pages, 72496 bytes).
 PDF statistics:
  36 PDF objects out of 1000 (max. 8388607)
  22 compressed objects within 1 object stream
