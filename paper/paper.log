@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.11.17)  21 NOV 2020 10:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.11.17)  21 NOV 2020 12:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -234,11 +234,11 @@ Overfull \hbox (469.75499pt too wide) in paragraph at lines 126--127
 [][] 
  []
 
-[3 <./NES_diagram.PNG>]
+[3 <./NES_diagram.PNG>] [4]
 
-LaTeX Warning: Citation `status_flags' on page 4 undefined on input line 166.
+LaTeX Warning: Citation `status_flags' on page 5 undefined on input line 185.
 
-[4] (./paper.bbl
+[5] [6] (./paper.bbl
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 5
 .
  (/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
@@ -260,27 +260,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 24--28
 i . nesdev . com / w / index . php / CPU _
  []
 
-) [5] (./paper.aux)
+) [7] (./paper.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4311 strings out of 480478
- 64646 string characters out of 5905958
- 297612 words of memory out of 5000000
- 20301 multiletter control sequences out of 15000+600000
- 554101 words of font info for 71 fonts, out of 8000000 for 9000
+ 4317 strings out of 480478
+ 64717 string characters out of 5905958
+ 297631 words of memory out of 5000000
+ 20305 multiletter control sequences out of 15000+600000
+ 555785 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  45i,7n,47p,256b,1227s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/urw/c
 ourier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr
-/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on paper.pdf (5 pages, 105836 bytes).
+/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts
+/type1/urw/times/utmri8a.pfb>
+Output written on paper.pdf (7 pages, 120678 bytes).
 PDF statistics:
- 44 PDF objects out of 1000 (max. 8388607)
- 26 compressed objects within 1 object stream
+ 56 PDF objects out of 1000 (max. 8388607)
+ 35 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

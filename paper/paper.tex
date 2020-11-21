@@ -142,7 +142,7 @@ and contains the sprites for the game. The VRAM is a 2KiB section of memory addr
 functions as RAM for the video production, storing large sections of a game, such as a map. The PPU's memory ends 
 with the palettes and the OAM. The palettes being similar to a painter's palette, maintaining the colors being used in a given
 index. The Object Attribute Memory is dynamic memory that changes according to what is on the screen. The OAM contains
-the data for the objects being displayed, including the color and position of the sprites.
+the data for the objects being displayed, including the color and position of the sprites~\cite{PPU}.
 
 The PPU was still limited in its ability to fit more demanding visuals, but this could be expanded by 
 mappers. There are hundreds of different mappers since these were made by the developer, this also means that
@@ -152,7 +152,7 @@ on a case by case basis. That does not mean that mappers were not reused, rather
 added to, so certain mappers may extend emulation capabilities more than others. These mappers were stored in the
 NES game cartridge and function like a page table in memory. This allowed for more functionality in a game, 
 while using less space in memory. The mapper would add to the PPU's memory depending on what needed to be 
-referenced at a given time. 
+referenced at a given time~\cite{mappers}. 
 
 The 6502 features 6 registers. The first major register is the 1-byte wide Accumulator (A) register.
 This register is used with the ALU, and supports using the status register to describe its behavior,
@@ -227,6 +227,17 @@ whether the operation takes an extra clock cycle. Using this information, the cl
 lookup table to take an instruction, lookup the opcode in the lookup table, dereference and call the functions
 found in the instruction structure it has found, and use those function return values to find out how many clock
 cycles the operation took to execute.
+
+\section{Conclusion}
+\label{sec:conclution}
+
+Our 6502 emulator was overall a success, featuring all addressing modes and all opcodes. We also created
+a GUI frontend for viewing the memory, CPU status and current opcode. The design of the emulator is extremely 
+modular and can be very easily extended into a fully functional NES capable of picture, sound and controller
+input. The next step to continuing this would be to adjust the bus to divide its addresses up into the different
+devices, and reading ROM data from ines format files and to use a mapper to place the program data onto the 
+system bus. After this, we would need to do research on implementing the PPU, APU and controller input.
+
 
 \singlespace
 
