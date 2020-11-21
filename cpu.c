@@ -124,8 +124,7 @@ IMP(CPU* cpu)
 unsigned char
 IMM(CPU* cpu)
 {
-	cpu->addr_abs = cpu->pc;
-	cpu->pc++;
+	cpu->addr_abs = cpu->pc++;
 	return 0;
 }
 
@@ -197,7 +196,7 @@ REL(CPU* cpu)
 unsigned char
 ABS(CPU* cpu)
 {
-	unsigned char hi, lo;
+	unsigned short hi, lo;
 
 	lo = cpu_read(cpu, cpu->pc);
 	cpu->pc++;
@@ -325,8 +324,8 @@ IZY(CPU* cpu)
 	t = cpu_read(cpu, cpu->pc);
 	cpu->pc++;
 
-	lo = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 0)) & 0x00FF);
-	hi = cpu_read(cpu, (unsigned short)(t + (unsigned short)(cpu->x + 1)) & 0x00FF);
+	lo = cpu_read(cpu, t & 0x00FF);
+	hi = cpu_read(cpu, (t + 1) & 0x00FF);
 
 	cpu->addr_abs = (hi << 8) | lo;
 	cpu->addr_abs += cpu->y;
@@ -697,7 +696,7 @@ unsigned char
 CMP(CPU* cpu) {
 	cpu_fetch(cpu);
 
-	unsigned char result = cpu->a - cpu->fetched;
+	unsigned short result = (unsigned short)(cpu->a) - (unsigned short)(cpu->fetched);
 
 	cpu_setFlag(cpu, N, result & 0x0080);
 	cpu_setFlag(cpu, C, cpu->a >= cpu->fetched);
@@ -1188,7 +1187,7 @@ STX(CPU* cpu) {
 unsigned char 
 STY(CPU* cpu) {
 	cpu_write(cpu, cpu->addr_abs, cpu->y);
-	return 1;
+	return 0;
 }
 
 /* Transfer A to X */

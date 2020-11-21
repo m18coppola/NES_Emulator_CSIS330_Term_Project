@@ -110,25 +110,39 @@ startEmu()
 	
 	/* assembled at https://www.masswerk.at/6502/assembler.html) */
 	/*
- 		; FIBONACCI SEQUENCE GENERATOR
- 		LDA  #0
-      		STA  $F0     ; LOWER NUMBER
-       		LDA  #1
-       		STA  $F1     ; HIGHER NUMBER
-       		LDX  #0
-	 LOOP:  LDA  $F1
-       		STA  $0F1B,X
-       		STA  $F2     ; OLD HIGHER NUMBER
-       		ADC  $F0
-       		STA  $F1     ; NEW HIGHER NUMBER
-       		LDA  $F2
-       		STA  $F0     ; NEW LOWER NUMBER
-       		INX
-       		CPX  #$0A    ; STOP AT FIB(10)
-       		BMI  LOOP
-       		RTS          ; RETURN FROM SUBROUTINE
+ 		;THIS SUBROUTINE ARRANGES THE 8-BIT ELEMENTS OF A LIST IN ASCENDING
+		;ORDER.  THE STARTING ADDRESS OF THE LIST IS IN LOCATIONS $30 AND
+		;$31.  THE LENGTH OF THE LIST IS IN THE FIRST BYTE OF THE LIST.  LOCATION
+		;$32 IS USED TO HOLD AN EXCHANGE FLAG.
+
+		SORT8    LDY #$00      ;TURN EXCHANGE FLAG OFF (= 0)
+         	STY $32
+         	LDA ($30),Y   ;FETCH ELEMENT COUNT
+         	TAX           ; AND PUT IT INTO X
+         	INY           ;POINT TO FIRST ELEMENT IN LIST
+         	DEX           ;DECREMENT ELEMENT COUNT
+	NXTEL   LDA ($30),Y   ;FETCH ELEMENT
+         	INY
+         	CMP ($30),Y   ;IS IT LARGER THAN THE NEXT ELEMENT?
+         	BCC CHKEND
+         	BEQ CHKEND
+                	      ;YES. EXCHANGE ELEMENTS IN MEMORY
+         	PHA           ; BY SAVING LOW BYTE ON STACK.
+         	LDA ($30),Y   ; THEN GET HIGH BYTE AND
+         	DEY           ; STORE IT AT LOW ADDRESS
+         	STA ($30),Y
+         	PLA           ;PULL LOW BYTE FROM STACK
+         	INY           ; AND STORE IT AT HIGH ADDRESS
+         	STA ($30),Y
+         	LDA #$FF      ;TURN EXCHANGE FLAG ON (= -1)
+         	STA $32
+	CHKEND  DEX           ;END OF LIST?
+         	BNE NXTEL     ;NO. FETCH NEXT ELEMENT
+         	BIT $32       ;YES. EXCHANGE FLAG STILL OFF?
+         	BMI SORT8     ;NO. GO THROUGH LIST AGAIN
+         	RTS           ;YES. LIST IS NOW ORDERED
 	*/
-	char* ss = strdup("A9 00 8D F0 00 A9 01 8D F1 00 A2 00 AD F1 00 9D 1B 0F 8D F2 00 6D F0 00 8D F1 00 AD F2 00 8D F0 00 E8 E0 0A 30 E6 60");
+	char* ss = strdup("A0 00 8C 32 00 B1 30 AA C8 CA B1 30 C8 D1 30 90 11 F0 0F 48 B1 30 88 91 30 68 C8 91 30 A9 FF 8D 32 00 CA D0 E5 2C 32 00 30 D6 60");
 	unsigned short nOffset = 0x8000;
 	char* hex_str;
 	unsigned char value;
@@ -136,6 +150,27 @@ startEmu()
 		value = strtol(hex_str, NULL, 16);
 		nes.ram[nOffset++] = value;
 	}
+
+	nes.ram[0x31] = 0x0B;
+	nes.ram[0x30] = 0xB1;
+
+	int listIndex = 0x0BB1;
+	nes.ram[listIndex] = (unsigned char) 5;
+	listIndex++;
+	nes.ram[listIndex] = (unsigned char) 4;
+	listIndex++;
+	nes.ram[listIndex] = (unsigned char) 6;
+	listIndex++;
+	nes.ram[listIndex] = (unsigned char) 9;
+	listIndex++;
+	nes.ram[listIndex] = (unsigned char) 3;
+	listIndex++;
+	nes.ram[listIndex] = (unsigned char) 2;
+	listIndex++;
+
+
+
+	
 
 	/* set reset vectors */
 	nes.ram[0xFFFC] = 0x00;
