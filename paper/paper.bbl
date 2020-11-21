@@ -1,9 +1,30 @@
 \begin{thebibliography}{1}
 
+\bibitem{cpu_registers}
+Cpu registers.
+\newblock \url{http://wiki.nesdev.com/w/index.php/CPU_registers}, 2015.
+\newblock Accessed: 2020-11-20.
+
+\bibitem{addressing_modes}
+Cpu addressing modes.
+\newblock \url{http://wiki.nesdev.com/w/index.php/CPU_addressing_modes}, 2018.
+\newblock Accessed: 2020-11-20.
+
 \bibitem{nesdev_CPU}
 Cpu.
 \newblock \url{wiki.nesdev.com/w/index.php/CPU}, 2019.
 \newblock Accessed: 2020-11-17.
+
+\bibitem{mem_mapping}
+Cpu memory map.
+\newblock \url{http://wiki.nesdev.com/w/index.php/CPU_memory_map}, 2019.
+\newblock Accessed: 2020-11-20.
+
+\bibitem{illegal_ops}
+Cpu unofficial opcodes.
+\newblock \url{https://wiki.nesdev.com/w/index.php/CPU_unofficial_opcodes},
+  2020.
+\newblock Accessed: 2020-11-20.
 
 \bibitem{wikipediaNES}
 Nintendo entertainment system.
