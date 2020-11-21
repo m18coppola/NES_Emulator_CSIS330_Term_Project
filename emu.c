@@ -28,6 +28,8 @@ TTF_Font* font = NULL;
 SDL_Surface* string = NULL;
 SDL_Color fontColor = {0x00, 0x00, 0xFF, 0xFF};
 SDL_Texture* stringTexture = NULL;
+char* viewportA;
+char* viewportB;
 
 /* 
  * starts the SDL system for graphics
@@ -147,9 +149,17 @@ drawMemory()
 
 	char* temp = malloc (sizeof(char) * 3);
 
+	int a = strtol(viewportA+2, NULL, 16);
+	int b = strtol(viewportB+2, NULL, 16);
+
 	for(int i = 0; i < 16*16; i++) {
-		sprintf(temp, "%02X", nes.ram[i]);
+		sprintf(temp, "%02X", nes.ram[i + a]);
 		drawString(temp, (i%16) * 30, (i/16) * 20);
+	}
+
+	for(int i = 0; i < 16*16; i++) {
+		sprintf(temp, "%02X", nes.ram[i + b]);
+		drawString(temp, (i%16) * 30, ((i/16) * 20)+350);
 	}
 
 	free(temp);
@@ -186,8 +196,8 @@ main(int argc, char* argv[])
 	char file[FILENAME_MAX] = "default.txt";
 
 	/* Viewports */
-	char* viewportA = "0x0000";
-	char* viewportB = "0x0100";
+	viewportA = "0x0000";
+	viewportB = "0x0100";
 
 	/* Params for getopt */
 	int ch;
